@@ -3,6 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#061521">
+<meta name="description" content="Мобильный симулятор рыбалки: лови рыбу, улучшай снасти и открывай новые водоёмы.">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
 <title>Fishing World Online 3.0</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -43,8 +51,8 @@
   <section class="grid two">
     <div class="card">
       <h2>🧰 Снасти</h2>
-      <div class="row"><label>Удилище</label><select id="rod"></select></div>
-      <div class="row"><label>Леска</label><select id="line"></select></div>
+      <div class="row"><label>Удочка</label><select id="rodSel"></select></div>
+      <div class="row"><label>Леска</label><select id="lineSel"></select></div>
       <div class="row"><label>Катушка</label><select id="reelSel"></select></div>
       <div class="row"><label>Наживка</label><select id="bait"></select></div>
       <p class="power">Мощность снасти: <b id="power">68</b></p>
@@ -81,5 +89,10 @@
   </section>
 </main>
 <script src="game.js"></script>
+<script>
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+}
+</script>
 </body>
 </html>
