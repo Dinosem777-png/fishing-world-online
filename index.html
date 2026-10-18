@@ -11,6 +11,7 @@
 <section class="screen active" id="screen-fish">
 <div class="profileline"><div><span class="eyebrow">РЫБАК</span><strong id="playerLevel">Уровень 1</strong></div><div class="xpbox"><div class="xptext"><span>Опыт</span><span id="xpText">0 / 100</span></div><div class="xpbar"><i id="xpBar"></i></div></div></div>
 <div class="scene card"><div class="sceneinfo"><div><span class="eyebrow">ТЕКУЩЕЕ МЕСТО</span><h2 id="spotName">Тихое озеро</h2></div><span class="weather" id="weather">☀️ Ясно</span></div><canvas id="water" width="800" height="440" aria-label="Анимированный водоём"></canvas>
+<div id="catchResult" class="catch-result" aria-live="polite"></div>
 <div class="fish-status" id="status">Всё готово к рыбалке. Забрасывай!</div>
 <div class="meters"><div><div class="meterlabel"><span>Натяжение лески</span><b id="tensionNum">0%</b></div><div class="meter"><i id="tension"></i></div></div><div><div class="meterlabel"><span>Сила рыбы</span><b id="fishPower">—</b></div><div class="meter"><i id="fishEnergy"></i></div></div></div>
 <div class="fishing-actions"><button class="btn btn-primary" id="castBtn">🎯 Забросить удочку</button><button class="btn btn-reel" id="reelBtn" disabled>⚡ Подсекать / тянуть</button></div>
