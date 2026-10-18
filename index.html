@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fishing World Online 3.0</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1>🎣 Fishing World Online <span>3.0</span></h1>
+    <p>Лови рыбу • прокачивай снасти • выполняй задания • ставь рекорды</p>
+  </div>
+  <div class="wallet">🪙 <b id="coins">250</b> &nbsp; ⭐ <b id="level">1</b></div>
+</header>
+
+<main class="app">
+  <section class="stats grid">
+    <div class="card"><small>Опыт</small><b id="xp">0 / 100</b><div class="bar"><i id="xpbar"></i></div></div>
+    <div class="card"><small>Лучший улов</small><b id="best">0.00 кг</b></div>
+    <div class="card"><small>Всего поймано</small><b id="caught">0</b></div>
+    <div class="card"><small>Репутация</small><b id="rep">0</b></div>
+  </section>
+
+  <section class="game card">
+    <div class="scene-head">
+      <div><b id="spotName">Тихое озеро</b><span id="weather">☀️ Ясно</span></div>
+      <div id="time">12:00</div>
+    </div>
+    <canvas id="water" width="900" height="360"></canvas>
+    <div class="fight">
+      <div class="meter"><span>Натяжение</span><div><i id="tension"></i></div></div>
+      <div class="meter"><span>Сила рыбы</span><div><i id="energy"></i></div></div>
+    </div>
+    <div id="status" class="status">Нажми «Забросить»</div>
+    <div class="actions">
+      <button id="cast">🎣 Забросить</button>
+      <button id="reel" disabled>⚡ Подсекать / тянуть</button>
+    </div>
+  </section>
+
+  <section class="grid two">
+    <div class="card">
+      <h2>🧰 Снасти</h2>
+      <div class="row"><label>Удилище</label><select id="rod"></select></div>
+      <div class="row"><label>Леска</label><select id="line"></select></div>
+      <div class="row"><label>Катушка</label><select id="reelSel"></select></div>
+      <div class="row"><label>Наживка</label><select id="bait"></select></div>
+      <p class="power">Мощность снасти: <b id="power">68</b></p>
+    </div>
+
+    <div class="card">
+      <h2>🌊 Локации</h2>
+      <div id="spots" class="choices"></div>
+      <p class="muted">Разные места дают разную рыбу и шанс на редкий улов.</p>
+    </div>
+  </section>
+
+  <section class="grid two">
+    <div class="card">
+      <h2>🎯 Ежедневные задания</h2>
+      <div id="quests"></div>
+    </div>
+    <div class="card">
+      <h2>🏆 Кубок рыболова</h2>
+      <p>Сегодняшний турнир: поймай самый тяжёлый экземпляр.</p>
+      <div class="cup"><span>🥇</span><b id="cupBest">0.00 кг</b></div>
+      <div id="leaderboard"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>🐟 Энциклопедия</h2>
+    <div id="fishbook" class="fishbook"></div>
+  </section>
+
+  <section class="card logcard">
+    <h2>📜 Последние события</h2>
+    <div id="log"></div>
+  </section>
+</main>
+<script src="game.js"></script>
+</body>
+</html>
