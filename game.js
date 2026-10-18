@@ -29,7 +29,7 @@ const GEAR=[
 ];
 const defaults={coins:250,xp:0,level:1,caught:0,best:0,spot:0,unlocked:[0],gear:{rod:0,line:0,reel:0,hook:0},baits:{worm:10,bread:10,corn:0,spinner:0,minnow:0},selectedBait:'worm',fishCaught:{},history:[],casts:0,questClaimed:false,questProgress:0};
 let state=load(),mode='idle',fish=null,fishWeight=0,fishEnergy=0,tension=0,actionTick=0,toastTimer=0,lastFrame=0,particles=[],sceneTime=0;
-function load(){try{return {...structuredClone(defaults),...JSON.parse(localStorage.getItem('odyssey-save')||'{}')}}catch{return structuredClone(defaults)}}
+function load(){try{const raw=JSON.parse(localStorage.getItem('odyssey-save')||'{}');return {...structuredClone(defaults),...raw,gear:{...defaults.gear,...(raw.gear||{})},baits:{...defaults.baits,...(raw.baits||{})},fishCaught:{...(raw.fishCaught||{})},unlocked:Array.isArray(raw.unlocked)?raw.unlocked:[0],history:Array.isArray(raw.history)?raw.history:[]}}catch{return structuredClone(defaults)}}
 function save(){localStorage.setItem('odyssey-save',JSON.stringify(state));renderAll()}
 function fmt(n){return Number(n).toLocaleString('ru-RU',{maximumFractionDigits:1})}
 function notify(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2200)}
