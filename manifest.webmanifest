@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "Fishing World Online",
+  "short_name": "Fishing World",
+  "description": "Мобильный симулятор рыбалки",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#061521",
+  "theme_color": "#061521",
+  "icons": [
+    {"src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}
