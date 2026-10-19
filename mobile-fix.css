@@ -1,0 +1,10 @@
+/* Mobile interaction hardening */
+html,body,button,.btn,.smallbtn,.navitem,.bait,.text-btn,.spotcard,.shopitem,.catchitem,.card,canvas,nav {
+  -webkit-user-select:none !important;
+  user-select:none !important;
+  -webkit-touch-callout:none !important;
+  -webkit-tap-highlight-color:transparent !important;
+}
+button,.btn,.smallbtn,.navitem,.bait,.text-btn { touch-action:manipulation !important; }
+canvas { touch-action:none !important; }
+button:focus,button:focus-visible { outline:none; }
