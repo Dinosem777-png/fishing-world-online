@@ -48,6 +48,7 @@ function fmt(n){return Number(n).toLocaleString('ru-RU',{maximumFractionDigits:1
 function notify(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2200)}
 function gearPower(){return ['rod','line','reel'].reduce((p,k)=>p*GEAR.find(g=>g.id===k).items[state.gear[k]||0].power,1)*CLOTHES[state.clothes.equipped||0].power}
 function hookPower(){return GEAR.find(g=>g.id==='hook').items[state.gear.hook||0].power}
+function tackleStrength(){const rod=GEAR.find(g=>g.id==='rod').items[state.gear.rod||0].power,line=GEAR.find(g=>g.id==='line').items[state.gear.line||0].power,reel=GEAR.find(g=>g.id==='reel').items[state.gear.reel||0].power,hook=hookPower(),clothes=CLOTHES[state.clothes.equipped||0].power;return Math.pow(rod*line*reel*hook*clothes,1/5)}
 function hookLimit(){return [3,10,25,60][state.gear.hook||0]}
 function gainXP(n){state.xp+=n;while(state.xp>=state.level*100){state.xp-=state.level*100;state.level++;state.coins+=state.level*35;notify('Новый уровень '+state.level+'! Бонус: '+state.level*35+' 🪙')}}
 function renderHeader(){$('coins').textContent=fmt(state.coins);$('playerLevel').textContent='Уровень '+state.level;$('xpText').textContent=state.xp+' / '+state.level*100;$('xpBar').style.width=(state.xp/(state.level*100)*100)+'%';$('spotName').textContent=SPOTS[state.spot].name}
@@ -80,16 +81,22 @@ if(mode!=='fight')return;
 const dt=Math.min(.05,Math.max(0,(now-(lastFightUpdate||now))/1000));lastFightUpdate=now;
 if(burst<=0&&Math.random()<dt*(.18+fishWeight/45)){burst=1.2+Math.random()*1.3;setStatus('💥 Рыба делает рывок! Отпусти подмотку и сбрось натяжение!')}
 if(burst>0)burst=Math.max(0,burst-dt);
-const fishForce=(.7+fishWeight/14)*(burst>0?2.6:1);
-const rodRelief=.7+GEAR.find(g=>g.id==='rod').items[state.gear.rod].power*.18;
+const rodPower=GEAR.find(g=>g.id==='rod').items[state.gear.rod||0].power;
+const linePower=GEAR.find(g=>g.id==='line').items[state.gear.line||0].power;
+const reelPower=GEAR.find(g=>g.id==='reel').items[state.gear.reel||0].power;
+const clothesPower=CLOTHES[state.clothes.equipped||0].power;
+const hook=hookPower();
+// Сопротивление рыбы зависит от её веса и всей установленной экипировки.
+const fishForce=(.7+fishWeight/14)/Math.pow(tackleStrength(),.72)*(burst>0?2.6:1);
+const rodRelief=.7+rodPower*.3;
 if(reeling){
-tension+=dt*(11+fishForce*8)/rodRelief;
-fishEnergy-=dt*(5+gearPower()*2.3)*(burst>0?.45:1);
+tension+=dt*(11+fishForce*8)/(rodRelief*Math.pow(linePower,.62));
+fishEnergy-=dt*(4.2+gearPower()*1.45+reelPower*1.8+hook*.7)*(burst>0?.42:1);
 }else if(loosening){
-tension-=dt*(23+GEAR.find(g=>g.id==='line').items[state.gear.line].power*5);
-fishEnergy=Math.min(100,fishEnergy+dt*1.2);
+tension-=dt*(20+linePower*7+clothesPower*4);
+fishEnergy=Math.min(100,fishEnergy+dt*.8);
 }else{
-tension+=dt*(burst>0?fishForce*5:fishForce*1.25);
+tension+=dt*(burst>0?fishForce*5:fishForce*1.25)/Math.pow(linePower,.62);
 fishEnergy=Math.min(100,fishEnergy+dt*.35);
 }
 tension=Math.max(0,Math.min(100,tension));fishEnergy=Math.max(0,fishEnergy);
