@@ -23,3 +23,30 @@ canvas{background:linear-gradient(#70c8e4 0 34%,#5c9b75 34% 45%,#168aa4 45% 100%
 
 /* Survival mode, cooking UI, and stronger anti-long-press protection for mobile browsers. */
 html,body,body *{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}button,button *,a,a *,.card,.navitem,.bait,.smallbtn,canvas{-webkit-touch-callout:none;touch-action:manipulation}.survival-panel{padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 12px}.survival-stat{min-width:0}.survival-label{display:flex;justify-content:space-between;gap:6px;font-size:11px;margin-bottom:6px}.survival-label b{color:var(--text)}#healthBar,#kitchenHealthBar{background:linear-gradient(90deg,#ff6c63,#70dfa4)}#hungerBar,#kitchenHungerBar{background:linear-gradient(90deg,#e6a85d,#ffe08a)}.survival-panel>p{grid-column:1/-1;margin:0;color:var(--muted);font-size:10px;line-height:1.4}.survival-panel>button{grid-column:1/-1;width:100%}.kitchen-stock{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.stock-chip{padding:10px 4px;text-align:center;border-radius:12px;border:1px solid #ffffff12;background:#102b37;font-size:20px}.stock-chip b{display:block;font-size:17px;color:var(--gold);margin:3px 0}.stock-chip span{display:block;font-size:10px;color:var(--muted)}.recipe-card{padding:13px}.recipe-head{display:flex;align-items:center;gap:11px}.recipe-head>span{width:48px;height:48px;display:grid;place-items:center;border-radius:14px;background:#1a3d49;font-size:28px;flex-shrink:0}.recipe-head h3{margin:0 0 4px;font-size:14px}.recipe-head p{margin:0;font-size:11px;color:var(--muted);line-height:1.4}.recipe-needs{font-size:11px;line-height:1.5;color:var(--muted);margin:12px 0 7px}.recipe-benefit{font-size:11px;color:var(--aqua);margin-bottom:11px}.cook-btn{width:100%;min-height:42px}.cook-btn:disabled{opacity:.38}
+
+
+/* Fisherman's home and animated campfire */
+.home-scene{position:relative;overflow:hidden;min-height:290px;padding:0 14px 15px;background:linear-gradient(180deg,#102a43 0%,#203c52 53%,#173b36 54%,#102b2d 100%);margin-bottom:14px}
+.home-night-sky{height:92px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 100%,#304c62 0%,transparent 68%)}
+.home-moon{position:absolute;right:14%;top:12px;font-size:34px;color:#ffe6a1;text-shadow:0 0 20px #ffe6a166}
+.home-star{position:absolute;color:#dcecff;animation:starTwinkle 2.6s ease-in-out infinite alternate}.star-one{top:21px;left:18%;font-size:14px}.star-two{top:44px;left:42%;animation-delay:.8s}.star-three{top:14px;left:67%;animation-delay:1.3s}
+.home-hut{position:absolute;top:64px;left:50%;transform:translateX(-50%);width:160px;height:112px;z-index:1}
+.hut-roof{position:absolute;top:0;left:-12px;width:184px;height:61px;background:repeating-linear-gradient(115deg,#754a32 0 9px,#89583a 9px 14px);clip-path:polygon(50% 0,100% 100%,0 100%);filter:drop-shadow(0 4px 3px #07131d)}
+.hut-body{position:absolute;top:43px;left:12px;width:136px;height:68px;background:linear-gradient(90deg,#704a31,#a8794d 48%,#71462f);border:3px solid #543724;border-radius:3px}
+.hut-window{position:absolute;top:10px;left:17px;width:31px;height:27px;background:#f4c76b;border:4px solid #503625;box-shadow:0 0 15px #f7c86b88;color:#7c542d;text-align:center;line-height:19px}
+.hut-door{position:absolute;right:15px;bottom:0;width:31px;height:47px;background:#422c24;border:3px solid #503625;border-bottom:0;border-radius:5px 5px 0 0}
+.campfire-area{position:relative;z-index:2;width:155px;height:125px;margin:73px auto 0;display:flex;justify-content:center;align-items:flex-end}
+.fire-glow{position:absolute;bottom:15px;width:130px;height:92px;border-radius:50%;background:#ff7a22;filter:blur(24px);opacity:.28;animation:fireGlow 1.4s ease-in-out infinite alternate}
+.fire-logs{position:absolute;bottom:18px;width:67px;height:12px;z-index:4}.fire-logs i,.fire-logs b{position:absolute;left:3px;top:2px;width:61px;height:10px;border-radius:7px;background:linear-gradient(#9a6540,#543321);transform:rotate(23deg);box-shadow:0 2px 2px #07131d}.fire-logs b{transform:rotate(-23deg);background:linear-gradient(#805033,#3c281f)}
+.flame{position:absolute;bottom:23px;left:50%;transform-origin:50% 100%;border-radius:55% 45% 48% 52%/68% 68% 32% 32%;clip-path:polygon(50% 0,65% 29%,100% 53%,82% 81%,63% 100%,35% 95%,13% 76%,0 53%,32% 28%);animation:flameDance .72s ease-in-out infinite alternate}
+.flame-back{width:55px;height:79px;margin-left:-27px;background:linear-gradient(#ffdb69,#ff6d22 65%,#bd3519);opacity:.88;animation-duration:.9s}
+.flame-mid{width:43px;height:62px;margin-left:-21px;background:linear-gradient(#fff1a2,#ff9b24 58%,#f04c1c);animation-delay:-.35s}
+.flame-front{width:24px;height:41px;margin-left:-12px;background:linear-gradient(#fff9ce,#ffe16a 60%,#ff8b22);animation-delay:-.18s}
+.fire-sparks{position:absolute;inset:0;pointer-events:none}.fire-sparks i{position:absolute;bottom:42px;left:50%;width:4px;height:4px;border-radius:50%;background:#ffd782;opacity:0;animation:embers 1.8s linear infinite}.fire-sparks i:nth-child(2){animation-delay:.45s;left:40%}.fire-sparks i:nth-child(3){animation-delay:.9s;left:61%}.fire-sparks i:nth-child(4){animation-delay:1.2s;left:34%}.fire-sparks i:nth-child(5){animation-delay:.7s;left:70%}
+.fire-caption{position:absolute;bottom:0;left:0;right:0;text-align:center;color:#ffd99a;font-size:10px;font-weight:800;letter-spacing:2px}
+.home-message{position:relative;z-index:2;margin:9px 0 0;text-align:center;font-size:11px;line-height:1.6;color:#d4e2e7}
+@keyframes flameDance{0%{transform:scaleX(.88) scaleY(.94) rotate(-4deg)}100%{transform:scaleX(1.08) scaleY(1.08) rotate(5deg)}}
+@keyframes fireGlow{from{opacity:.2;transform:scale(.88)}to{opacity:.4;transform:scale(1.08)}}
+@keyframes embers{0%{transform:translate(0,0) scale(.5);opacity:0}15%{opacity:.95}100%{transform:translate(12px,-68px) scale(0);opacity:0}}
+@keyframes starTwinkle{from{opacity:.3}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.flame,.fire-glow,.fire-sparks i,.home-star{animation:none}}
