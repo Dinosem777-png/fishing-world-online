@@ -190,6 +190,41 @@ else if(state.spot===3){ctx.fillStyle='#d4e1df';ctx.beginPath();ctx.moveTo(0,h*.
 else if(state.spot===4){ctx.fillStyle='#536849';for(let i=0;i<6;i++){const x=i*155+30;ctx.fillRect(x,h*.24,7,h*.22);ctx.strokeStyle='#536849';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(x+3,h*.3);ctx.lineTo(x-22,h*.2);ctx.moveTo(x+4,h*.34);ctx.lineTo(x+25,h*.23);ctx.stroke()}for(let i=0;i<12;i++)reed(i*70+8,h*.47,'#728b4d');}
 else if(state.spot===5){ctx.fillStyle='#e8d4ae';ctx.beginPath();ctx.moveTo(0,h*.35);ctx.lineTo(w*.18,h*.31);ctx.lineTo(w*.28,h*.4);ctx.lineTo(w*.45,h*.35);ctx.lineTo(w*.63,h*.42);ctx.lineTo(w*.82,h*.34);ctx.lineTo(w,h*.39);ctx.lineTo(w,h*.48);ctx.lineTo(0,h*.48);ctx.fill();ctx.strokeStyle='#f4f8e7';ctx.lineWidth=3;for(let i=0;i<5;i++){ctx.beginPath();ctx.moveTo(w*.08+i*w*.19,h*.29+(i%2)*10);ctx.quadraticCurveTo(w*.12+i*w*.19,h*.26,w*.16+i*w*.19,h*.29);ctx.stroke()}}
 else if(state.spot===6){ctx.fillStyle='#d9c77e';for(let i=0;i<5;i++){const x=i*175+40;ctx.beginPath();ctx.moveTo(x,h*.44);ctx.lineTo(x+18,h*.23);ctx.lineTo(x+37,h*.44);ctx.closePath();ctx.fill()}ctx.fillStyle='rgba(255,244,165,.7)';for(let i=0;i<12;i++){const x=(i*71+sceneTime*12)%w,y=h*(.25+(i%4)*.045);ctx.beginPath();ctx.arc(x,y,1.5+(i%3),0,Math.PI*2);ctx.fill()}}
+// Сильнее различаем силуэты берегов: у каждой локации собственная узнаваемая панорама.
+if(state.spot===0){
+  // Тихое озеро: дальние округлые берега и камышовые островки.
+  ctx.fillStyle='#9bc9b1';ctx.beginPath();ctx.moveTo(0,h*.34);ctx.quadraticCurveTo(w*.18,h*.26,w*.34,h*.35);ctx.quadraticCurveTo(w*.52,h*.42,w*.68,h*.32);ctx.quadraticCurveTo(w*.83,h*.25,w,h*.34);ctx.lineTo(w,h*.43);ctx.lineTo(0,h*.43);ctx.fill();
+  for(let i=0;i<5;i++){const x=w*(.08+i*.19);ctx.fillStyle=i%2?'#447d56':'#548c5d';ctx.beginPath();ctx.ellipse(x,h*.405,18,6,0,0,Math.PI*2);ctx.fill();for(let j=0;j<3;j++)reed(x-8+j*8,h*.405,'#73965a')}
+}else if(state.spot===1){
+  // Старая река: извилистый канал между высокими берегами и деревянные сваи.
+  ctx.fillStyle='#8bb4a0';ctx.beginPath();ctx.moveTo(0,h*.29);ctx.quadraticCurveTo(w*.2,h*.36,w*.38,h*.27);ctx.quadraticCurveTo(w*.6,h*.18,w*.76,h*.29);ctx.quadraticCurveTo(w*.88,h*.36,w,h*.27);ctx.lineTo(w,h*.39);ctx.quadraticCurveTo(w*.7,h*.32,w*.5,h*.39);ctx.quadraticCurveTo(w*.2,h*.45,0,h*.37);ctx.fill();
+  ctx.fillStyle='#594b38';for(let i=0;i<5;i++){const x=w*(.12+i*.17);ctx.fillRect(x,h*.37,5,h*.09);ctx.fillRect(x-4,h*.37,13,4)}
+}else if(state.spot===2){
+  // Лесная заводь: глубокая тень хвойного леса и утренний туман.
+  ctx.fillStyle='rgba(219,244,220,.32)';ctx.fillRect(0,h*.27,w,h*.16);
+  for(let i=0;i<15;i++){const x=i*w/14;pine(x,h*.43-(i%4)*4,38+(i%3)*9,i%2?'#214e39':'#2e6845')}
+  ctx.fillStyle='rgba(230,250,230,.23)';ctx.beginPath();ctx.ellipse(w*.5,h*.39,w*.34,h*.025,0,0,Math.PI*2);ctx.fill();
+}else if(state.spot===3){
+  // Горная река: зубчатые снежные пики, ледяные уступы и пена у порогов.
+  ctx.fillStyle='#f0f5f1';ctx.beginPath();ctx.moveTo(0,h*.33);ctx.lineTo(w*.15,h*.08);ctx.lineTo(w*.22,h*.22);ctx.lineTo(w*.37,h*.04);ctx.lineTo(w*.47,h*.25);ctx.lineTo(w*.65,h*.06);ctx.lineTo(w*.78,h*.26);ctx.lineTo(w*.9,h*.12);ctx.lineTo(w,h*.3);ctx.lineTo(w,h*.42);ctx.lineTo(0,h*.42);ctx.fill();
+  ctx.fillStyle='#6d9394';ctx.beginPath();ctx.moveTo(0,h*.39);ctx.lineTo(w*.2,h*.29);ctx.lineTo(w*.34,h*.4);ctx.lineTo(w*.5,h*.31);ctx.lineTo(w*.67,h*.4);ctx.lineTo(w*.83,h*.3);ctx.lineTo(w,h*.38);ctx.lineTo(w,h*.44);ctx.lineTo(0,h*.44);ctx.fill();
+}else if(state.spot===4){
+  // Болото: тёмные кривые деревья, низкий туман и зловещая зелёная дымка.
+  ctx.fillStyle='rgba(194,211,158,.22)';ctx.fillRect(0,h*.24,w,h*.2);
+  ctx.strokeStyle='#46533a';ctx.lineWidth=7;for(let i=0;i<6;i++){const x=i*w/5;ctx.beginPath();ctx.moveTo(x,h*.43);ctx.lineTo(x+((i%2)?-8:9),h*.29);ctx.lineTo(x+((i%2)?-22:24),h*.24);ctx.moveTo(x+((i%2)?-8:9),h*.32);ctx.lineTo(x+((i%2)?-27:28),h*.28);ctx.stroke()}
+  ctx.fillStyle='rgba(196,212,151,.18)';for(let i=0;i<3;i++){ctx.beginPath();ctx.ellipse(w*(.2+i*.3),h*(.36+i%2*.025),w*.17,h*.018,0,0,Math.PI*2);ctx.fill()}
+}else if(state.spot===5){
+  // Морской берег: открытый горизонт, парусник и чайки.
+  ctx.fillStyle='#e9f0e5';ctx.fillRect(0,h*.31,w,h*.055);
+  ctx.fillStyle='#f6e1b8';ctx.beginPath();ctx.moveTo(0,h*.36);ctx.quadraticCurveTo(w*.24,h*.32,w*.43,h*.38);ctx.quadraticCurveTo(w*.73,h*.43,w,h*.35);ctx.lineTo(w,h*.44);ctx.lineTo(0,h*.44);ctx.fill();
+  const bx=w*.28,by=h*.34;ctx.fillStyle='#704e39';ctx.beginPath();ctx.moveTo(bx-19,by);ctx.lineTo(bx+22,by);ctx.lineTo(bx+14,by+8);ctx.lineTo(bx-12,by+8);ctx.fill();ctx.strokeStyle='#5e5142';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(bx,by-26);ctx.stroke();ctx.fillStyle='#fff7df';ctx.beginPath();ctx.moveTo(bx+2,by-24);ctx.lineTo(bx+2,by-3);ctx.lineTo(bx+17,by-3);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#fff';ctx.lineWidth=2;for(let i=0;i<3;i++){const x=w*(.62+i*.1),y=h*(.2+(i%2)*.035);ctx.beginPath();ctx.moveTo(x-8,y+3);ctx.quadraticCurveTo(x,y-4,x+8,y+3);ctx.stroke()}
+}else if(state.spot===6){
+  // Золотая форель: кристаллы, светящиеся жилы и золотистая аура.
+  ctx.fillStyle='#e7d18a';ctx.beginPath();ctx.moveTo(0,h*.4);ctx.lineTo(w*.12,h*.31);ctx.lineTo(w*.22,h*.4);ctx.lineTo(w*.36,h*.29);ctx.lineTo(w*.5,h*.4);ctx.lineTo(w*.66,h*.3);ctx.lineTo(w*.82,h*.4);ctx.lineTo(w,h*.32);ctx.lineTo(w,h*.44);ctx.lineTo(0,h*.44);ctx.fill();
+  for(let i=0;i<7;i++){const x=w*(.07+i*.14),y=h*(.3+(i%3)*.035),s=10+(i%3)*5;ctx.fillStyle=i%2?'#a5dfe0':'#fff0a1';ctx.beginPath();ctx.moveTo(x,y+s);ctx.lineTo(x-s*.55,y);ctx.lineTo(x-s*.2,y-s);ctx.lineTo(x+s*.45,y-s*.25);ctx.lineTo(x+s*.55,y+s);ctx.closePath();ctx.fill();ctx.strokeStyle='rgba(255,255,218,.8)';ctx.lineWidth=1.5;ctx.stroke()}
+  const aura=ctx.createRadialGradient(w*.5,h*.34,2,w*.5,h*.34,w*.48);aura.addColorStop(0,'rgba(255,237,148,.34)');aura.addColorStop(1,'rgba(255,237,148,0)');ctx.fillStyle=aura;ctx.fillRect(0,h*.15,w,h*.3)
+}
 const water=ctx.createLinearGradient(0,h*.43,0,h);water.addColorStop(0,waterTop);water.addColorStop(.45,waterMid);water.addColorStop(1,waterDeep);ctx.fillStyle=water;ctx.fillRect(0,h*.43,w,h*.57);
 // Дополнительные детали локаций: камни, водопад, прибрежные травы и живые волны.
 function rock(x,y,s,color){ctx.fillStyle=color;ctx.beginPath();ctx.moveTo(x-s,y);ctx.lineTo(x-s*.68,y-s*.72);ctx.lineTo(x+s*.12,y-s);ctx.lineTo(x+s*.78,y-s*.52);ctx.lineTo(x+s,y);ctx.closePath();ctx.fill();ctx.strokeStyle='rgba(255,255,255,.18)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x-s*.48,y-s*.48);ctx.lineTo(x+s*.05,y-s*.67);ctx.stroke()}
@@ -235,6 +270,14 @@ if(state.spot===3){rock(w*.7,h*.65,15,'#7e9696');rock(w*.98,h*.64,18,'#8b9d9b')}
 if(state.spot===4){for(let i=0;i<4;i++)reed(w*.7+i*w*.075,h*.59,'#8b9a58')}
 if(state.spot===5){ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillRect(w*.72,h*.575,w*.23,2)}
 if(state.spot===6){ctx.strokeStyle='rgba(255,236,144,.85)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(w*.7,h*.58);ctx.lineTo(w*.99,h*.53);ctx.stroke()}
+// Особая форма пристани у каждого берега, а не один и тот же прямоугольный пирс.
+if(state.spot===0){ctx.fillStyle='#795538';ctx.beginPath();ctx.moveTo(w*.72,h*.58);ctx.lineTo(w*.91,h*.56);ctx.lineTo(w*.91,h*.68);ctx.lineTo(w*.84,h*.72);ctx.lineTo(w*.72,h*.69);ctx.closePath();ctx.fill()}
+else if(state.spot===1){ctx.fillStyle=dock.deck;ctx.fillRect(w*.69,h*.57,w*.31,h*.22);ctx.fillStyle=dock.edge;ctx.fillRect(w*.72,h*.55,w*.012,h*.23);ctx.fillRect(w*.9,h*.54,w*.012,h*.25);ctx.strokeStyle=dock.plank;ctx.lineWidth=3;for(let i=0;i<5;i++){ctx.beginPath();ctx.moveTo(w*(.7+i*.06),h*.58);ctx.lineTo(w*(.7+i*.06),h*.78);ctx.stroke()}}
+else if(state.spot===2){ctx.fillStyle=dock.deck;ctx.beginPath();ctx.moveTo(w*.67,h*.59);ctx.lineTo(w*.88,h*.57);ctx.lineTo(w*.96,h*.69);ctx.lineTo(w*.7,h*.76);ctx.closePath();ctx.fill();ctx.strokeStyle='#3e6c4a';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(w*.73,h*.68);ctx.lineTo(w*.73,h*.84);ctx.moveTo(w*.91,h*.67);ctx.lineTo(w*.94,h*.83);ctx.stroke()}
+else if(state.spot===3){ctx.fillStyle=dock.deck;ctx.beginPath();ctx.moveTo(w*.7,h*.57);ctx.lineTo(w,h*.53);ctx.lineTo(w,h*.78);ctx.lineTo(w*.73,h*.77);ctx.closePath();ctx.fill();ctx.strokeStyle='#d9e6e2';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(w*.71,h*.58);ctx.lineTo(w,h*.54);ctx.stroke()}
+else if(state.spot===4){ctx.fillStyle=dock.deck;ctx.beginPath();ctx.moveTo(w*.75,h*.6);ctx.lineTo(w,h*.57);ctx.lineTo(w,h*.78);ctx.lineTo(w*.75,h*.76);ctx.closePath();ctx.fill();ctx.strokeStyle='#7f895d';ctx.lineWidth=4;for(let i=0;i<5;i++){ctx.beginPath();ctx.moveTo(w*(.78+i*.045),h*.61);ctx.lineTo(w*(.78+i*.045),h*.75);ctx.stroke()}}
+else if(state.spot===5){ctx.fillStyle=dock.deck;ctx.beginPath();ctx.moveTo(w*.65,h*.6);ctx.lineTo(w,h*.55);ctx.lineTo(w,h*.77);ctx.lineTo(w*.7,h*.78);ctx.closePath();ctx.fill();ctx.strokeStyle='#e8d4ae';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(w*.68,h*.61);ctx.lineTo(w,h*.56);ctx.stroke()}
+else if(state.spot===6){ctx.fillStyle=dock.deck;ctx.beginPath();ctx.moveTo(w*.68,h*.58);ctx.lineTo(w,h*.51);ctx.lineTo(w,h*.82);ctx.lineTo(w*.68,h*.77);ctx.closePath();ctx.fill();ctx.strokeStyle='#ffeb9b';ctx.lineWidth=3;for(let i=0;i<6;i++){ctx.beginPath();ctx.moveTo(w*(.7+i*.05),h*(.585-i*.009));ctx.lineTo(w*(.7+i*.05),h*.78);ctx.stroke()}}
 // Стул на площадке: сиденье, спинка и ножки
 ctx.fillStyle=state.spot===6?'#a98942':'#79502f';ctx.fillRect(w*.795,h*.655,w*.105,h*.025);ctx.strokeStyle=dock.edge;ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(w*.805,h*.675);ctx.lineTo(w*.80,h*.755);ctx.moveTo(w*.89,h*.675);ctx.lineTo(w*.895,h*.755);ctx.moveTo(w*.80,h*.69);ctx.lineTo(w*.895,h*.69);ctx.stroke();ctx.fillStyle=dock.plank;ctx.fillRect(w*.79,h*.59,w*.018,h*.085);ctx.fillRect(w*.79,h*.59,w*.11,h*.018);
 // Рыбак сидит на стуле
@@ -249,6 +292,14 @@ ctx.fillStyle='#273747';ctx.beginPath();ctx.arc(w*.837,h*.48,2,0,Math.PI*2);ctx.
 const castReachArm=mode==='cast'?Math.sin(castT*Math.PI)*.045:0, fightArm=mode==='fight'?Math.min(.025,tension/3000):0;
 ctx.strokeStyle='#e9b58a';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(w*.84,h*.55);ctx.lineTo(w*(.79+Math.sin(t*.008)*.004-castReachArm),h*(.57+lean-castReachArm*.3));ctx.lineTo(w*(.77-castReachArm+fightArm),h*(.53+lean-castReachArm*.8));ctx.stroke();
 ctx.strokeStyle=outfit.color;ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(w*.84,h*.55);ctx.lineTo(w*(.805-castReachArm*.5+fightArm),h*.565);ctx.stroke();
+// Ведро с уже пойманной рыбой стоит рядом с креслом рыбака.
+ctx.save();ctx.translate(w*.925,h*.704);
+ctx.fillStyle='rgba(18,35,33,.22)';ctx.beginPath();ctx.ellipse(0,23,17,4,0,0,Math.PI*2);ctx.fill();
+ctx.fillStyle=state.spot===6?'#b99b45':state.spot===5?'#9caaad':'#8c9690';ctx.beginPath();ctx.moveTo(-13,0);ctx.lineTo(13,0);ctx.lineTo(9,22);ctx.lineTo(-9,22);ctx.closePath();ctx.fill();
+ctx.strokeStyle='#d4d9ce';ctx.lineWidth=2.5;ctx.beginPath();ctx.ellipse(0,1,13,4,0,0,Math.PI*2);ctx.stroke();ctx.strokeStyle='#687c7b';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-9,2);ctx.quadraticCurveTo(-17,-17,0,-16);ctx.quadraticCurveTo(17,-17,9,2);ctx.stroke();
+function bucketFish(x,y,s,col,rot){ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.fillStyle=col;ctx.beginPath();ctx.ellipse(0,0,7*s,3*s,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.moveTo(-5*s,0);ctx.lineTo(-10*s,-4*s);ctx.lineTo(-10*s,4*s);ctx.closePath();ctx.fill();ctx.fillStyle='#fff2ce';ctx.beginPath();ctx.arc(4*s,-.5*s,1*s,0,Math.PI*2);ctx.fill();ctx.restore()}
+bucketFish(-4,-2,1,'#e6a24c',-.28);bucketFish(4,-4,.88,state.spot===6?'#ffd75d':'#86c7bd',.25);bucketFish(0,-7,.72,'#d9d7bc',-.08);
+ctx.restore();
 // Удочка и леска, направленная от рыбака в озеро
 const castFlex=(Number(state.castPower||70)-70),castT=mode==='cast'?Math.max(0,Math.min(1,(t-castAnimStart)/850)):1,castSwing=mode==='cast'?Math.sin(castT*Math.PI):0,rodBend=mode==='fight'?Math.min(.17,tension/900+fishWeight/360):mode==='bite'?.012:0,tipX=w*(.54-.18*castSwing-castFlex*.0006),tipY=h*(.29+.18*castSwing-castFlex*.0009+rodBend);
 ctx.strokeStyle='#70462b';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(w*.78,h*.54);ctx.quadraticCurveTo(w*(.68-.10*castSwing-castFlex*.0006),h*(.31-.10*castSwing-castFlex*.0009+rodBend),tipX,tipY);ctx.stroke();ctx.strokeStyle='#f7f0d6';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(tipX,tipY);ctx.quadraticCurveTo(w*(.56-.08*castSwing),h*.45,w*(.53-.22*castSwing),h*.62);ctx.stroke();
