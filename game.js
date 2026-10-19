@@ -170,7 +170,8 @@ ctx.fillStyle='#273747';ctx.beginPath();ctx.arc(w*.837,h*.48,2,0,Math.PI*2);ctx.
 ctx.strokeStyle='#e9b58a';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(w*.84,h*.55);ctx.lineTo(w*(.79+Math.sin(t*.008)*.004),h*(.57+lean));ctx.lineTo(w*.77,h*(.53+lean));ctx.stroke();
 ctx.strokeStyle=outfit.color;ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(w*.84,h*.55);ctx.lineTo(w*.805,h*.565);ctx.stroke();
 // Удочка и леска, направленная от рыбака в озеро
-ctx.strokeStyle='#70462b';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(w*.78,h*.54);ctx.quadraticCurveTo(w*(.68-(Number(state.castPower||70)-70)*.0006),h*(.31-(Number(state.castPower||70)-70)*.0009+(mode==='fight'?Math.min(.12,tension/650):0)),w*.54,h*(.29-(Number(state.castPower||70)-70)*.0007));ctx.stroke();
+const castFlex=(Number(state.castPower||70)-70),rodBend=mode==='fight'?Math.min(.17,tension/900+fishWeight/360):mode==='bite'?.012:0;
+ctx.strokeStyle='#70462b';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(w*.78,h*.54);ctx.quadraticCurveTo(w*(.68-castFlex*.0006),h*(.31-castFlex*.0009+rodBend),w*.54,h*(.29-castFlex*.0007+rodBend*.72));ctx.stroke();
 ctx.strokeStyle='#f7f0d6';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(w*.54,h*.29);ctx.quadraticCurveTo(w*.56,h*.45,w*.53,h*.62);ctx.stroke();
 // Поплавок и круги поклёвки
 if(mode==='cast'||mode==='bite'||mode==='fight'){
@@ -184,10 +185,10 @@ ctx.strokeStyle='rgba(255,236,143,.95)';ctx.lineWidth=3;ctx.beginPath();ctx.elli
 if(mode==='fight'){
 ctx.strokeStyle='rgba(255,255,255,.8)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(px-9,py+7);ctx.lineTo(px+10,py+13);ctx.stroke();
 const fishX=px+Math.sin(t*.006)*(14+fishWeight*1.2),fishY=py+24+Math.sin(t*.012)*5;
-ctx.save();ctx.translate(fishX,fishY);ctx.rotate(Math.sin(t*.01)*.18);ctx.fillStyle=fish&&fish.rare?'#f5d4ff':'#f2b84d';ctx.beginPath();ctx.ellipse(0,0,Math.min(25,12+fishWeight*.35),7,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.moveTo(-8,0);ctx.lineTo(-17,-7);ctx.lineTo(-17,7);ctx.closePath();ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(7,-2,2.3,0,Math.PI*2);ctx.fill();ctx.restore();
+ctx.save();ctx.translate(fishX,fishY);ctx.rotate(Math.sin(t*.01)*.18);ctx.fillStyle=fish&&fish.rare?'#f5d4ff':'#f2b84d';ctx.beginPath();ctx.ellipse(0,0,Math.min(32,10+fishWeight*.48),7,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.moveTo(-8,0);ctx.lineTo(-17,-7);ctx.lineTo(-17,7);ctx.closePath();ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(7,-2,2.3,0,Math.PI*2);ctx.fill();ctx.restore();
 if(burst>0){ctx.fillStyle='#fff0a0';ctx.font='bold 17px system-ui';ctx.fillText('!',fishX+12,fishY-10);
 const jump=Math.abs(Math.sin((1.3-burst)*Math.PI/1.3))*Math.min(48,20+fishWeight*1.5);
-if(burst>0.35){ctx.save();ctx.translate(fishX+Math.sin(t*.01)*15, h*.64-jump);ctx.rotate(Math.sin(t*.02)*.45);ctx.fillStyle=fish&&fish.rare?'#f5d4ff':'#f2b84d';ctx.beginPath();ctx.ellipse(0,0,Math.min(27,13+fishWeight*.4),8,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.moveTo(-8,0);ctx.lineTo(-19,-8);ctx.lineTo(-19,8);ctx.closePath();ctx.fill();ctx.restore();ctx.fillStyle='rgba(225,255,255,.85)';for(let j=0;j<4;j++){ctx.beginPath();ctx.arc(fishX-8+j*5,h*.64-3-(j%2)*6,2,0,Math.PI*2);ctx.fill()}}
+if(burst>0.35){ctx.save();ctx.translate(fishX+Math.sin(t*.01)*15, h*.64-jump);ctx.rotate(Math.sin(t*.02)*.45);ctx.fillStyle=fish&&fish.rare?'#f5d4ff':'#f2b84d';ctx.beginPath();ctx.ellipse(0,0,Math.min(35,11+fishWeight*.52),8,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.moveTo(-8,0);ctx.lineTo(-19,-8);ctx.lineTo(-19,8);ctx.closePath();ctx.fill();ctx.restore();ctx.fillStyle='rgba(225,255,255,.85)';for(let j=0;j<4;j++){ctx.beginPath();ctx.arc(fishX-8+j*5,h*.64-3-(j%2)*6,2,0,Math.PI*2);ctx.fill()}}
 }
 }
 }
