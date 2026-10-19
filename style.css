@@ -5,3 +5,5 @@ html{min-height:100%;background:var(--bg);-webkit-text-size-adjust:100%}body{mar
 .btn-loosen{grid-column:1/-1;border:1px solid #4b9da1;background:linear-gradient(135deg,#c3f0f0,#6cb9cf);color:#07313b;min-height:43px;font-weight:800}.btn-loosen:disabled{opacity:.35}.fishing-actions{grid-template-columns:1fr 1fr}.fishing-actions .btn-loosen{grid-column:1/-1}
 
 .clothes-item .itememoji{font-size:28px}.clothes-item{border-color:#ffffff1c}.clothes-item .itemmeta{color:#8ee8ce}
+
+.cast-control{margin:8px 2px 12px;padding:11px 12px;background:#102b38;border:1px solid #234958;border-radius:13px}.cast-label{display:flex;align-items:center;justify-content:space-between;font-size:12px}.cast-label b{color:var(--gold);font-variant-numeric:tabular-nums}#castPower{display:block;width:100%;margin:12px 0 6px;accent-color:#50d6cf;min-height:24px}.cast-scale{display:flex;justify-content:space-between;color:var(--muted);font-size:10px}
