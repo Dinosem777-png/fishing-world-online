@@ -14,7 +14,7 @@
 <div id="catchResult" class="catch-result" aria-live="polite"></div>
 <div class="fish-status" id="status">Всё готово к рыбалке. Забрасывай!</div>
 <div class="meters"><div><div class="meterlabel"><span>Натяжение лески</span><b id="tensionNum">0%</b></div><div class="meter"><i id="tension"></i></div></div><div><div class="meterlabel"><span>Сила рыбы</span><b id="fishPower">—</b></div><div class="meter"><i id="fishEnergy"></i></div></div></div>
-<div class="fishing-actions"><button class="btn btn-primary" id="castBtn">🎯 Забросить удочку</button><button class="btn btn-reel" id="reelBtn" disabled>⚡ Удерживать: подматывать</button><button class="btn btn-loosen" id="easeBtn" disabled>↘️ Ослабить леску</button></div>
+<div class="cast-control"><div class="cast-label"><label for="castPower">💪 Сила заброса</label><b id="castPowerText">70%</b></div><input id="castPower" type="range" min="25" max="100" step="5" value="70" aria-label="Сила заброса"><div class="cast-scale"><span>Ближний</span><span>Дальний</span></div></div><div class="fishing-actions"><button class="btn btn-primary" id="castBtn">🎯 Забросить удочку</button><button class="btn btn-reel" id="reelBtn" disabled>⚡ Удерживать: подматывать</button><button class="btn btn-loosen" id="easeBtn" disabled>↘️ Ослабить леску</button></div>
 <p class="hint">Во время вываживания следи за натяжением: не давай леске порваться.</p></div>
 <div class="section-title"><h2>Выбери наживку</h2><span>Подбирай под рыбу</span></div><div class="bait-row" id="baitList"></div>
 <div class="section-title"><h2>Мои снасти</h2><button class="text-btn" data-go="shop">Улучшить →</button></div><div class="gear-summary card" id="gearSummary"></div>
