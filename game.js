@@ -111,10 +111,10 @@ fishDistance=Math.min(1,fishDistance+dt*(burst>0?.038:.004));
 }
 if(burst>0){fishSide+=fishTurn*dt*(.6+fishWeight/35);if(Math.abs(fishSide)>.95){fishTurn*=-1;fishSide=Math.max(-.95,Math.min(.95,fishSide))}}else fishSide*=Math.max(0,1-dt*.8);
 tension=Math.max(0,Math.min(100,tension));fishEnergy=Math.max(0,fishEnergy);
-if(tension>58){const wear=dt*(tension>85?2.8:tension>72?1.55:.55)*(burst>0?1.5:1);state.lineDurability=Math.max(0,state.lineDurability-wear);state.reelDurability=Math.max(0,state.reelDurability-dt*(tension>85?1.65:tension>72?.85:.3)*(burst>0?1.4:1))}
-if(overload>.2&&tension>60){state.rodDurability=Math.max(0,state.rodDurability-dt*(overload*2.5+(burst>0?1.5:0)))}
+if(tension>58){const wear=dt*(tension>85?.7:tension>72?.39:.14)*(burst>0?1.2:1);state.lineDurability=Math.max(0,state.lineDurability-wear);state.reelDurability=Math.max(0,state.reelDurability-dt*(tension>85?.42:tension>72?.22:.08)*(burst>0?1.15:1))}
+if(overload>.2&&tension>60){state.rodDurability=Math.max(0,state.rodDurability-dt*(overload*.65+(burst>0?.4:0)))}
 updateMeters();renderDurability();
-if(state.rodDurability<=0){state.rodDurability=0;mode='idle';stopActions();state.lineDurability=Math.max(0,state.lineDurability-8);save();setStatus('💥 Удочка сломалась от перегрузки! Почини её во вкладке «Ремонт».');notify('Удочка сломалась!');renderAll();return}
+if(state.rodDurability<=0){state.rodDurability=0;mode='idle';stopActions();state.lineDurability=Math.max(0,state.lineDurability-2);save();setStatus('💥 Удочка сломалась от перегрузки! Почини её во вкладке «Ремонт».');notify('Удочка сломалась!');renderAll();return}
 if(state.lineDurability<=0||tension>=100){state.lineDurability=0;mode='idle';stopActions();save();setStatus('💔 Леска изношена и порвалась! Перейди во вкладку «Ремонт».');notify('Рыба сорвалась — леска порвалась!');renderAll();return}
 if(state.reelDurability<=0){state.reelDurability=0;mode='idle';stopActions();save();setStatus('⚙️ Катушка заклинила от нагрузки! Почини её во вкладке «Ремонт».');notify('Катушка сломалась!');renderAll();return}
 if(fishEnergy<=0){mode='idle';stopActions();landFish();return}
