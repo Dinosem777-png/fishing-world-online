@@ -11,3 +11,5 @@ html{min-height:100%;background:var(--bg);-webkit-text-size-adjust:100%}body{mar
 /* Mobile-game controls: prevent long-press text selection/copy/share menus on buttons. */
 button,button *, .btn, .btn *, .navitem, .navitem *, .smallbtn, .smallbtn *, .bait, .bait *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;}
 button{-webkit-touch-callout:none;}
+
+.line-condition{margin:0 2px 12px;padding:10px 11px;background:#102b38;border:1px solid #234958;border-radius:12px}.line-condition .meter{height:8px}.line-condition #lineDurability{background:linear-gradient(90deg,#ff6c63,#ffd36b,#6bdc9a)}.repair-line{width:100%;margin-top:9px;min-height:37px}.repair-line:disabled{opacity:.4}
