@@ -3,3 +3,5 @@ html{min-height:100%;background:var(--bg);-webkit-text-size-adjust:100%}body{mar
 .catch-result{display:none;align-items:center;gap:12px;margin:0 0 10px;padding:12px;border-radius:14px;border:1px solid #e8c56c;background:linear-gradient(135deg,#203c3e,#182d38);animation:catchPop .3s ease-out}.catch-result.visible{display:flex}.catch-illustration{width:54px;height:54px;flex-shrink:0;display:grid;place-items:center;border-radius:13px;background:#29494a;font-size:34px}.catch-result strong{display:block;font-size:13px;color:#ffe39a}.catch-result p{margin:5px 0 0;font-size:12px;color:#d6eeee}@keyframes catchPop{from{transform:scale(.96);opacity:.5}to{transform:scale(1);opacity:1}}
 
 .btn-loosen{grid-column:1/-1;border:1px solid #4b9da1;background:linear-gradient(135deg,#c3f0f0,#6cb9cf);color:#07313b;min-height:43px;font-weight:800}.btn-loosen:disabled{opacity:.35}.fishing-actions{grid-template-columns:1fr 1fr}.fishing-actions .btn-loosen{grid-column:1/-1}
+
+.clothes-item .itememoji{font-size:28px}.clothes-item{border-color:#ffffff1c}.clothes-item .itemmeta{color:#8ee8ce}
