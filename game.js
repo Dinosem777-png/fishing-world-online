@@ -43,7 +43,7 @@ function renderSpots(){$('spotList').innerHTML=SPOTS.map(s=>{const unlocked=stat
 function renderShop(){$('shopList').innerHTML=GEAR.map(g=>'<div class="section-title"><h2>'+g.emoji+' '+g.name+'</h2></div>'+g.items.map((it,i)=>{const owned=i<=state.gear[g.id],current=i===state.gear[g.id],can=i===state.gear[g.id]+1&&state.coins>=it.cost;return '<div class="card shopitem"><div class="itememoji">'+g.emoji+'</div><div class="itembody"><h3>'+it.name+'</h3><p>'+it.desc+'</p><div class="itemmeta">Мощность ×'+it.power+'</div></div>'+(current?'<span class="selectedtag">НАДЕТО</span>':owned?'<span class="selectedtag">КУПЛЕНО</span>':'<button class="smallbtn" data-buy="'+g.id+'" data-index="'+i+'" '+(!can?'disabled':'')+'>'+it.cost+' 🪙</button>')+'</div>'}).join('')).join('');$('shopList').querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>{const g=GEAR.find(x=>x.id===b.dataset.buy),i=+b.dataset.index,it=g.items[i];if(i!==state.gear[g.id]+1||state.coins<it.cost)return;state.coins-=it.cost;state.gear[g.id]=i;save();notify('Снасть улучшена!')})}
 function renderKeep(){const unique=Object.keys(state.fishCaught).length;$('collectionStats').innerHTML='<div class="statbox"><b>'+state.caught+'</b><span>Всего рыб</span></div><div class="statbox"><b>'+fmt(state.best)+' кг</b><span>Рекорд</span></div><div class="statbox"><b>'+unique+'/'+FISH.length+'</b><span>Виды</span></div>';$('catchList').innerHTML=state.history.length?state.history.slice(0,15).map(h=>'<div class="card catchitem"><div class="itememoji">'+h.emoji+'</div><div class="itembody"><h3>'+h.name+'</h3><p>'+h.spot+' · '+h.time+'</p></div><b>'+fmt(h.weight)+' кг</b></div>').join(''):'<div class="empty">Здесь появится твой первый улов. Пора на рыбалку!</div>';$('fishBook').innerHTML=FISH.map(f=>{const known=!!state.fishCaught[f.id];return '<div class="fishentry '+(known?'':'locked')+'"><div class="fishemoji">'+(known?f.emoji:'❔')+'</div><h3>'+(known?f.name:'Неизвестная рыба')+'</h3><p>'+(known?f.min+'–'+f.max+' кг':'Поймай её, чтобы открыть')+'</p></div>'}).join('')}
 function renderTasks(){const goal=5,progress=Math.min(goal,state.questProgress);$('taskCard').innerHTML='<h3>🎯 Первая пятёрка</h3><p>Поймай '+goal+' рыб на любых водоёмах.</p><div class="taskprogress"><i style="width:'+(progress/goal*100)+'%"></i></div><p>'+progress+' / '+goal+' рыб</p>'+(state.questClaimed?'<span class="selectedtag">НАГРАДА ПОЛУЧЕНА ✓</span>':'<button class="btn btn-primary" id="claimTask" '+(progress<goal?'disabled':'')+'>Забрать награду · 100 🪙 + 50 опыта</button>');const b=$('claimTask');if(b)b.onclick=()=>{if(state.questProgress<goal||state.questClaimed)return;state.questClaimed=true;state.coins+=100;gainXP(50);save();notify('Задание выполнено!')};$('recordText').textContent=state.caught?'Самый тяжёлый улов: '+fmt(state.best)+' кг. Всего поймано: '+state.caught+'.':'Поймай первую рыбу, чтобы начать историю рекордов.'}
-function renderAll(){renderHeader();renderBaits();renderSpots();renderShop();renderKeep();renderTasks();$('castBtn').disabled=mode==='bite'||mode==='fight';$('reelBtn').disabled=mode!=='bite'&&mode!=='fight'}
+function renderAll(){renderHeader();renderBaits();renderSpots();renderShop();renderKeep();renderTasks();$('castBtn').disabled=mode==='bite'||mode==='fight';$('reelBtn').disabled=mode!=='bite'&&mode!=='fight';if($('easeBtn'))$('easeBtn').disabled=mode!=='fight'}
 function showScreen(name){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id==='screen-'+name));document.querySelectorAll('.navitem').forEach(b=>b.classList.toggle('active',b.dataset.screen===name));if(name==='shop')renderShop();if(name==='spots')renderSpots();if(name==='keep')renderKeep();window.scrollTo({top:0,behavior:'smooth'})}
 document.querySelectorAll('[data-screen]').forEach(b=>b.onclick=()=>showScreen(b.dataset.screen));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>showScreen(b.dataset.go));
 function setStatus(t){$('status').textContent=t}
@@ -55,35 +55,64 @@ const hookFactor=Math.min(1.25,hookPower()/1.4);
 fishWeight=+(fish.min+Math.random()*(fish.max-fish.min)*Math.min(1.15,gearPower()/1.8)*hookFactor*sizeBonus).toFixed(2);
 fishWeight=Math.min(fishWeight,hookLimit()*(.75+Math.random()*.25));fishEnergy=100;mode='bite';setStatus('🐟 Поклёвка! Быстро нажми «Подсекать / тянуть»!');$('reelBtn').disabled=false;notify('Есть поклёвка!');},1800+Math.random()*3300);save()}
 function chooseFish(arr){let pool=arr.map(f=>({f,w:f.rare?1.5:Math.max(1,10/(f.max+1))}));let total=pool.reduce((a,x)=>a+x.w,0),r=Math.random()*total;for(const x of pool){r-=x.w;if(r<=0)return x.f}return arr[0]}
-function reel(){
-if(mode==='bite'){mode='fight';setStatus('Рыба на крючке! Нажимай коротко, давая леске ослабнуть.');tension=18;updateMeters();return}
+let reeling=false,loosening=false,lastFightUpdate=0,burst=0,weatherIndex=0,lastWeatherUpdate=0;
+function beginFight(){mode='fight';reeling=false;loosening=false;tension=24;fishEnergy=100;burst=0;lastFightUpdate=performance.now();setStatus('Рыба на крючке! Удерживай «Подматывать», отпускай при сильном натяжении.');updateMeters();renderAll()}
+function reel(){if(mode==='bite'){beginFight();return}if(mode!=='fight')return;reeling=true;loosening=false}
+function easeLine(){if(mode!=='fight')return;reeling=false;loosening=true;setStatus('Ослабляешь леску — дай рыбе успокоиться.')}
+function stopActions(){reeling=false;loosening=false}
+function updateFight(now){
 if(mode!=='fight')return;
-actionTick++;
-// Короткие нажатия утомляют рыбу, а рывки иногда ослабляют натяжение.
-tension=Math.min(100,tension+5+Math.random()*5);
-fishEnergy=Math.max(0,fishEnergy-(10+gearPower()*1.8+Math.random()*5));
-if(Math.random()<.62)tension=Math.max(3,tension-(8+Math.random()*10));
-if(fishWeight>hookLimit()*.7)tension+=Math.random()*5;
+const dt=Math.min(.05,Math.max(0,(now-(lastFightUpdate||now))/1000));lastFightUpdate=now;
+if(burst<=0&&Math.random()<dt*(.18+fishWeight/45)){burst=1.2+Math.random()*1.3;setStatus('💥 Рыба делает рывок! Отпусти подмотку и сбрось натяжение!')}
+if(burst>0)burst=Math.max(0,burst-dt);
+const fishForce=(.7+fishWeight/14)*(burst>0?2.6:1);
+const rodRelief=.7+GEAR.find(g=>g.id==='rod').items[state.gear.rod].power*.18;
+if(reeling){
+tension+=dt*(11+fishForce*8)/rodRelief;
+fishEnergy-=dt*(5+gearPower()*2.3)*(burst>0?.45:1);
+}else if(loosening){
+tension-=dt*(23+GEAR.find(g=>g.id==='line').items[state.gear.line].power*5);
+fishEnergy=Math.min(100,fishEnergy+dt*1.2);
+}else{
+tension+=dt*(burst>0?fishForce*5:fishForce*1.25);
+fishEnergy=Math.min(100,fishEnergy+dt*.35);
+}
+tension=Math.max(0,Math.min(100,tension));fishEnergy=Math.max(0,fishEnergy);
 updateMeters();
-if(tension>=100){mode='idle';setStatus('💔 Леска порвалась! Ослабь натяжение и улучши леску/крючок.');notify('Рыба сорвалась!');renderAll();return}
-if(fishEnergy<=0){landFish();return}
-setStatus(tension>72?'⚠️ Ослабь натяжение: дай рыбе немного потянуть!':'Рыба сопротивляется! Продолжай короткими нажатиями.')}
-function updateMeters(){$('tension').style.width=tension+'%';$('tensionNum').textContent=Math.round(tension)+'%';$('fishEnergy').style.width=fishEnergy+'%';$('fishPower').textContent=Math.round(fishEnergy)+'%'}
+if(tension>=100){mode='idle';stopActions();setStatus('💔 Леска порвалась! Во время рывка отпускай подмотку и ослабляй леску.');notify('Рыба сорвалась!');renderAll();return}
+if(fishEnergy<=0){mode='idle';stopActions();landFish();return}
+if(tension>82)setStatus('🚨 Критическое натяжение! НЕМЕДЛЕННО ослабь леску!');
+else if(tension>65)setStatus('⚠️ Натяжение высокое — отпусти подмотку!');
+else if(burst>0)setStatus('💥 Рыба рвётся в сторону! Ослабь леску!');
+else if(reeling)setStatus('🎣 Подматываешь… следи за натяжением!');
+else if(loosening)setStatus('↘️ Леска ослабляется, рыба теряет силы.');
+else setStatus('Рыба сопротивляется. Подматывай короткими удержаниями!');
+}
+function updateMeters(){$('tension').style.width=tension+'%';$('tensionNum').textContent=Math.round(tension)+'%';$('fishEnergy').style.width=fishEnergy+'%';$('fishPower').textContent=Math.round(fishEnergy)+'%';$('fishEnergy').style.opacity=fishEnergy<25?'.65':'1'}
 function landFish(){mode='idle';const f=fish,weight=fishWeight;const value=Math.max(1,Math.round(f.value*weight*SPOTS[state.spot].bonus));state.coins+=value;state.caught++;state.best=Math.max(state.best,weight);state.fishCaught[f.id]=(state.fishCaught[f.id]||0)+1;state.questProgress++;gainXP(f.xp);state.history.unshift({name:f.name,emoji:f.emoji,weight,spot:SPOTS[state.spot].name,time:new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})});state.history=state.history.slice(0,30);setStatus('🎉 '+f.name+' · '+fmt(weight)+' кг! Продано за '+value+' монет.');
 const result=$('catchResult');
 if(result){result.innerHTML='<div class="catch-illustration">'+f.emoji+'</div><div><strong>'+(f.rare?'✨ РЕДКИЙ УЛОВ!':'🎣 Улов!')+' '+f.name+'</strong><p>'+fmt(weight)+' кг · +'+f.xp+' опыта · '+value+' 🪙</p></div>';result.classList.add('visible')}
 notify((f.rare?'✨ РЕДКАЯ РЫБА: ':'Улов: ')+f.name+' · '+fmt(weight)+' кг');renderAll();save()}
-$('castBtn').onclick=cast;$('reelBtn').onclick=reel;
+$('castBtn').onclick=cast;
+const reelBtn=$('reelBtn'),easeBtn=$('easeBtn');
+reelBtn.addEventListener('pointerdown',e=>{e.preventDefault();reel()});
+['pointerup','pointercancel','pointerleave','lostpointercapture'].forEach(ev=>reelBtn.addEventListener(ev,stopActions));
+if(easeBtn){easeBtn.addEventListener('pointerdown',e=>{e.preventDefault();easeLine()});['pointerup','pointercancel','pointerleave','lostpointercapture'].forEach(ev=>easeBtn.addEventListener(ev,stopActions))}
+window.addEventListener('blur',stopActions);
 const canvas=$('water'),ctx=canvas.getContext('2d');
 function draw(t){
 const w=canvas.width,h=canvas.height;sceneTime=t*.00035;
-const sky=ctx.createLinearGradient(0,0,0,h*.55);sky.addColorStop(0,'#70c8e4');sky.addColorStop(1,'#f4dfb1');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
+const phase=(t%150000)/150000,night=phase>.72||phase<.08,dusk=!night&&phase>.60;
+const sky=ctx.createLinearGradient(0,0,0,h*.55);
+sky.addColorStop(0,night?'#102844':dusk?'#d87967':'#70c8e4');sky.addColorStop(1,night?'#425e79':dusk?'#f0b17c':'#f4dfb1');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
+if(t-lastWeatherUpdate>1200){lastWeatherUpdate=t;const weather=['☀️ Ясно','🌤️ Лёгкий ветер','🌦️ Морось'];weatherIndex=Math.floor(t/28000)%weather.length;$('weather').textContent=night?'🌙 Ночь':dusk?'🌇 Закат':weather[weatherIndex]}
+if(night){ctx.fillStyle='rgba(240,246,255,.8)';for(let i=0;i<18;i++){const sx=(i*97+31)%w,sy=(i*47+19)%(h*.35);ctx.beginPath();ctx.arc(sx,sy,1+(i%3)*.35,0,Math.PI*2);ctx.fill()}}
 // Солнце с мягким свечением
 const sunX=w*.16,sunY=h*.16;
 const glow=ctx.createRadialGradient(sunX,sunY,5,sunX,sunY,62);
 glow.addColorStop(0,'rgba(255,244,174,.72)');glow.addColorStop(1,'rgba(255,244,174,0)');
 ctx.fillStyle=glow;ctx.fillRect(sunX-65,sunY-65,130,130);
-ctx.fillStyle='#fff0ad';ctx.beginPath();ctx.arc(sunX,sunY,18,0,Math.PI*2);ctx.fill();
+ctx.fillStyle=night?'#e5edf9':dusk?'#ffad6e':'#fff0ad';ctx.beginPath();ctx.arc(sunX,sunY,18,0,Math.PI*2);ctx.fill();
 // Медленно плывущие облака
 function cloud(x,y,s){ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.fillStyle='rgba(255,255,255,.68)';ctx.beginPath();ctx.ellipse(0,5,25,9,0,0,Math.PI*2);ctx.ellipse(-12,0,12,10,0,0,Math.PI*2);ctx.ellipse(2,-5,15,14,0,0,Math.PI*2);ctx.ellipse(16,1,12,9,0,0,Math.PI*2);ctx.fill();ctx.restore()}
 cloud(((w*.35+sceneTime*22)%(w+100))-50,h*.13,.78);
@@ -113,20 +142,27 @@ ctx.fillStyle='#e5bb58';ctx.beginPath();ctx.ellipse(w*.83,h*.46,18,5,0,0,Math.PI
 ctx.fillStyle='#273747';ctx.beginPath();ctx.arc(w*.837,h*.48,2,0,Math.PI*2);ctx.fill();
 ctx.strokeStyle='#e9b58a';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(w*.84,h*.55);ctx.lineTo(w*.79,h*.57);ctx.lineTo(w*.77,h*.53);ctx.stroke();
 // Удочка и леска, направленная от рыбака в озеро
-ctx.strokeStyle='#70462b';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(w*.78,h*.54);ctx.quadraticCurveTo(w*.68,h*.31,w*.54,h*.29);ctx.stroke();
+ctx.strokeStyle='#70462b';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(w*.78,h*.54);ctx.quadraticCurveTo(w*.68,h*(.31+(mode==='fight'?Math.min(.12,tension/650):0)),w*.54,h*.29);ctx.stroke();
 ctx.strokeStyle='#f7f0d6';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(w*.54,h*.29);ctx.quadraticCurveTo(w*.56,h*.45,w*.53,h*.62);ctx.stroke();
 // Поплавок и круги поклёвки
 if(mode==='cast'||mode==='bite'||mode==='fight'){
-const px=w*.53,baseY=h*.625;const dip=mode==='bite'?Math.abs(Math.sin(t*.025))*13:mode==='fight'?Math.sin(t*.018)*7:0;const py=baseY+Math.sin(t*.004)*2+dip;
+const px=w*(.53+(mode==='fight'?Math.sin(t*.0028)*(fishWeight/500):0)),baseY=h*.625;const dip=mode==='bite'?Math.abs(Math.sin(t*.025))*13:mode==='fight'?Math.sin(t*.018)*7+tension*.12:0;const py=baseY+Math.sin(t*.004)*2+dip;
 ctx.fillStyle='#f4f0d7';ctx.beginPath();ctx.ellipse(px,py,5,9,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#f15e4e';ctx.fillRect(px-4,py-9,8,9);ctx.fillStyle='#fff3c8';ctx.fillRect(px-2,py-15,4,6);
 ctx.beginPath();ctx.ellipse(px,py+10,12+Math.sin(t*.006)*4,3,0,0,Math.PI*2);ctx.strokeStyle='rgba(218,255,244,.75)';ctx.lineWidth=2;ctx.stroke();
 if(mode==='bite'){
 // Брызги вокруг поплавка при поклёвке
 for(let i=0;i<6;i++){const a=i*Math.PI/3+t*.008;const r=13+Math.abs(Math.sin(t*.02+i))*12;ctx.fillStyle='rgba(233,255,249,.9)';ctx.beginPath();ctx.arc(px+Math.cos(a)*r,py+Math.sin(a)*r*.55,2.1,0,Math.PI*2);ctx.fill()}
 ctx.strokeStyle='rgba(255,236,143,.95)';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(px,py+12,18+Math.sin(t*.02)*7,6,0,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#fff2a1';ctx.font='bold 22px system-ui';ctx.fillText('!',px+18,py-12)}
-if(mode==='fight'){ctx.strokeStyle='rgba(255,255,255,.8)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(px-9,py+7);ctx.lineTo(px+10,py+13);ctx.stroke()}
+if(mode==='fight'){
+ctx.strokeStyle='rgba(255,255,255,.8)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(px-9,py+7);ctx.lineTo(px+10,py+13);ctx.stroke();
+const fishX=px+Math.sin(t*.006)*(14+fishWeight*1.2),fishY=py+24+Math.sin(t*.012)*5;
+ctx.save();ctx.translate(fishX,fishY);ctx.rotate(Math.sin(t*.01)*.18);ctx.fillStyle=fish&&fish.rare?'#f5d4ff':'#f2b84d';ctx.beginPath();ctx.ellipse(0,0,Math.min(25,12+fishWeight*.35),7,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.moveTo(-8,0);ctx.lineTo(-17,-7);ctx.lineTo(-17,7);ctx.closePath();ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(7,-2,2.3,0,Math.PI*2);ctx.fill();ctx.restore();
+if(burst>0){ctx.fillStyle='#fff0a0';ctx.font='bold 17px system-ui';ctx.fillText('!',fishX+12,fishY-10)}
+}
 }
 requestAnimationFrame(draw)}
+function gameLoop(now){updateFight(now);requestAnimationFrame(gameLoop)}
+requestAnimationFrame(gameLoop);
 renderAll();setStatus('Всё готово к рыбалке. Забрасывай!');
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 })();
