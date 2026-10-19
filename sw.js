@@ -1,4 +1,4 @@
-const CACHE = 'odyssey-mobile-v31';
+const CACHE = 'odyssey-mobile-v32';
 const FILES = ['./', './index.html', './style.css', './game.js', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', event => {
@@ -22,8 +22,8 @@ self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
 
-  // Always check the network for the game script so published updates appear.
-  if (url.pathname.endsWith('/game.js') || url.pathname.endsWith('/index.html') || url.pathname.endsWith('/sw.js')) {
+  // Check the network for game assets so published updates appear immediately.
+  if (url.pathname.endsWith('/game.js') || url.pathname.endsWith('/index.html') || url.pathname.endsWith('/style.css') || url.pathname.endsWith('/sw.js')) {
     event.respondWith(
       fetch(event.request, { cache: 'no-store' })
         .then(response => {
