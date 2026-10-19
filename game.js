@@ -217,12 +217,26 @@ fishShape(w*(.43+Math.sin(t*.0003+.9)*.05),h*.84,.72,fishColors[1],-1);
 fishShape(w*(.14+Math.sin(t*.00035+2)*.04),h*.9,.58,fishColors[2],1);
 // Растения под водой
 for(let i=0;i<9;i++){const x=i*31+12;ctx.strokeStyle='#1b7567';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,h);ctx.quadraticCurveTo(x-9,h*.83,x+Math.sin(t*.001+i)*7,h*.77);ctx.stroke()}
-// Деревянный пирс справа
-ctx.fillStyle='#6c452b';ctx.beginPath();ctx.moveTo(w*.68,h*.57);ctx.lineTo(w,h*.52);ctx.lineTo(w,h*.83);ctx.lineTo(w*.69,h*.78);ctx.closePath();ctx.fill();
-for(let i=0;i<7;i++){const x=w*.69+i*w*.045;ctx.strokeStyle=i%2?'#b17a45':'#c18b50';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,h*.57-(x-w*.68)*.16);ctx.lineTo(x,h*.79-(x-w*.68)*.02);ctx.stroke()}
-ctx.strokeStyle='#4b3022';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(w*.73,h*.69);ctx.lineTo(w*.73,h*.88);ctx.moveTo(w*.93,h*.66);ctx.lineTo(w*.93,h*.9);ctx.stroke();
-// Стул на пирсе: сиденье, спинка и ножки
-ctx.fillStyle='#79502f';ctx.fillRect(w*.795,h*.655,w*.105,h*.025);ctx.strokeStyle='#5a3927';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(w*.805,h*.675);ctx.lineTo(w*.80,h*.755);ctx.moveTo(w*.89,h*.675);ctx.lineTo(w*.895,h*.755);ctx.moveTo(w*.80,h*.69);ctx.lineTo(w*.895,h*.69);ctx.stroke();ctx.fillStyle='#8f6138';ctx.fillRect(w*.79,h*.59,w*.018,h*.085);ctx.fillRect(w*.79,h*.59,w*.11,h*.018);
+// Береговая площадка меняет материал и детали в зависимости от водоёма.
+const dockStyles=[
+{deck:'#795538',plank:'#bd8b53',edge:'#4b392a',post:'#65452f'},
+{deck:'#5e4936',plank:'#92785a',edge:'#3e352b',post:'#493c30'},
+{deck:'#6b5139',plank:'#b08a5c',edge:'#40372b',post:'#594630'},
+{deck:'#7e8d8b',plank:'#c3d5d1',edge:'#526b6b',post:'#667b7a'},
+{deck:'#4f5940',plank:'#7f895d',edge:'#313e2d',post:'#3f4b32'},
+{deck:'#b69b75',plank:'#e2cba4',edge:'#7f684d',post:'#8c7457'},
+{deck:'#8a6936',plank:'#f2d477',edge:'#5b482b',post:'#77602e'}
+],dock=dockStyles[state.spot]||dockStyles[0];
+ctx.fillStyle=dock.deck;ctx.beginPath();ctx.moveTo(w*.68,h*.57);ctx.lineTo(w,h*.52);ctx.lineTo(w,h*.83);ctx.lineTo(w*.69,h*.78);ctx.closePath();ctx.fill();
+ctx.strokeStyle=dock.plank;ctx.lineWidth=state.spot===3?5:3;
+for(let i=0;i<7;i++){const x=w*.69+i*w*.045;ctx.beginPath();ctx.moveTo(x,h*.57-(x-w*.68)*.16);ctx.lineTo(x,h*.79-(x-w*.68)*.02);ctx.stroke()}
+ctx.strokeStyle=dock.edge;ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(w*.73,h*.69);ctx.lineTo(w*.73,h*.88);ctx.moveTo(w*.93,h*.66);ctx.lineTo(w*.93,h*.9);ctx.stroke();
+if(state.spot===3){rock(w*.7,h*.65,15,'#7e9696');rock(w*.98,h*.64,18,'#8b9d9b')}
+if(state.spot===4){for(let i=0;i<4;i++)reed(w*.7+i*w*.075,h*.59,'#8b9a58')}
+if(state.spot===5){ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillRect(w*.72,h*.575,w*.23,2)}
+if(state.spot===6){ctx.strokeStyle='rgba(255,236,144,.85)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(w*.7,h*.58);ctx.lineTo(w*.99,h*.53);ctx.stroke()}
+// Стул на площадке: сиденье, спинка и ножки
+ctx.fillStyle=state.spot===6?'#a98942':'#79502f';ctx.fillRect(w*.795,h*.655,w*.105,h*.025);ctx.strokeStyle=dock.edge;ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(w*.805,h*.675);ctx.lineTo(w*.80,h*.755);ctx.moveTo(w*.89,h*.675);ctx.lineTo(w*.895,h*.755);ctx.moveTo(w*.80,h*.69);ctx.lineTo(w*.895,h*.69);ctx.stroke();ctx.fillStyle=dock.plank;ctx.fillRect(w*.79,h*.59,w*.018,h*.085);ctx.fillRect(w*.79,h*.59,w*.11,h*.018);
 // Рыбак сидит на стуле
 const outfit=CLOTHES[state.clothes.equipped||0],walk=Math.sin(t*.006)*(mode==='fight'?2.4:1.1),breath=Math.sin(t*.003)*1.5,lean=mode==='fight'?Math.min(.035,tension/2600):0;
 ctx.lineCap='round';ctx.strokeStyle=outfit.pants;ctx.lineWidth=10;ctx.beginPath();ctx.moveTo(w*.84,h*.625);ctx.lineTo(w*(.82+walk*.002),h*.675);ctx.lineTo(w*(.855+walk*.003),h*.715);ctx.lineTo(w*(.89+walk*.002),h*.715);ctx.moveTo(w*.84,h*.625);ctx.lineTo(w*(.875-walk*.002),h*.675);ctx.lineTo(w*(.865-walk*.003),h*.70);ctx.lineTo(w*(.82-walk*.002),h*.70);ctx.stroke();
@@ -239,7 +253,9 @@ const castFlex=(Number(state.castPower||70)-70),castT=mode==='cast'?Math.max(0,M
 ctx.strokeStyle='#70462b';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(w*.78,h*.54);ctx.quadraticCurveTo(w*(.68-.10*castSwing-castFlex*.0006),h*(.31-.10*castSwing-castFlex*.0009+rodBend),tipX,tipY);ctx.stroke();ctx.strokeStyle='#f7f0d6';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(tipX,tipY);ctx.quadraticCurveTo(w*(.56-.08*castSwing),h*.45,w*(.53-.22*castSwing),h*.62);ctx.stroke();
 // Поплавок и круги поклёвки
 if(mode==='cast'||mode==='bite'||mode==='fight'){
-const px=w*(.53+(mode==='fight'?Math.sin(t*.0028)*(fishWeight/500):0)),baseY=h*.625;const dip=mode==='bite'?Math.abs(Math.sin(t*.025))*13:mode==='fight'?Math.sin(t*.018)*7+tension*.12:0;const py=baseY+Math.sin(t*.004)*2+dip;
+const px=w*(mode==='cast'?.74-(Number(state.castPower||70)/100)*.30:.53+(mode==='fight'?Math.sin(t*.0028)*(fishWeight/500):0)),baseY=h*.625;const dip=mode==='bite'?Math.abs(Math.sin(t*.025))*13:mode==='fight'?Math.sin(t*.018)*7+tension*.12:0;const py=baseY+Math.sin(t*.004)*2+dip;
+// Волна и брызги в точке приводнения поплавка при дальнем/ближнем забросе.
+if(mode==='cast'&&castT>.58){const splashP=Math.min(1,(castT-.58)/.42),splashR=8+splashP*30;ctx.strokeStyle='rgba(240,255,255,'+(1-splashP*.78)+')';ctx.lineWidth=2.5-splashP;ctx.beginPath();ctx.ellipse(px,py+7,splashR,splashR*.25,0,0,Math.PI*2);ctx.stroke();for(let i=0;i<5;i++){const a=i*Math.PI*2/5+t*.003,rr=7+splashP*19;ctx.fillStyle='rgba(238,255,255,'+(1-splashP*.7)+')';ctx.beginPath();ctx.arc(px+Math.cos(a)*rr,py+Math.sin(a)*rr*.55-splashP*8,1.5+splashP,0,Math.PI*2);ctx.fill()}}
 ctx.fillStyle='#f4f0d7';ctx.beginPath();ctx.ellipse(px,py,5,9,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#f15e4e';ctx.fillRect(px-4,py-9,8,9);ctx.fillStyle='#fff3c8';ctx.fillRect(px-2,py-15,4,6);
 ctx.beginPath();ctx.ellipse(px,py+10,12+Math.sin(t*.006)*4,3,0,0,Math.PI*2);ctx.strokeStyle='rgba(218,255,244,.75)';ctx.lineWidth=2;ctx.stroke();
 if(mode==='bite'){
