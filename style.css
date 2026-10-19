@@ -50,3 +50,10 @@ html,body,body *{-webkit-touch-callout:none;-webkit-user-select:none;user-select
 @keyframes embers{0%{transform:translate(0,0) scale(.5);opacity:0}15%{opacity:.95}100%{transform:translate(12px,-68px) scale(0);opacity:0}}
 @keyframes starTwinkle{from{opacity:.3}to{opacity:1}}
 @media(prefers-reduced-motion:reduce){.flame,.fire-glow,.fire-sparks i,.home-star{animation:none}}
+
+.bottomnav{grid-template-columns:repeat(5,minmax(0,1fr));padding:5px 7px calc(5px + env(safe-area-inset-bottom));gap:3px}
+.navitem{min-height:43px;font-size:10px;gap:2px;padding:3px 0;border-radius:10px}.navitem span{font-size:18px}
+.nav-submenu{position:fixed;z-index:9;right:8px;bottom:calc(61px + env(safe-area-inset-bottom));width:min(235px,calc(100vw - 16px));padding:7px;border:1px solid #2a5662;border-radius:15px;background:#0a202bf7;box-shadow:0 12px 38px #0008;backdrop-filter:blur(16px);display:grid;gap:4px}
+.nav-submenu[hidden]{display:none}.nav-submenu button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:10px;background:#12313e;color:var(--text);padding:11px 12px;font-size:12px;font-weight:700}.nav-submenu button span{font-size:18px}
+.gear-locked{font-size:10px;color:var(--muted);white-space:nowrap}.daily-task{padding:13px}.daily-task-top{display:flex;align-items:center;gap:10px}.daily-emoji{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:#1a3d49;font-size:23px;flex-shrink:0}.daily-task-copy{flex:1;min-width:0}.daily-task-copy h3{font-size:13px;margin:0 0 4px}.daily-task-copy p{font-size:11px;color:var(--muted);margin:0;line-height:1.35}.daily-count{font-size:12px;font-weight:800;color:var(--aqua);white-space:nowrap}.daily-task .taskprogress{margin:11px 0 8px}.daily-reward{font-size:10px;color:var(--gold);line-height:1.6;margin-bottom:10px}.daily-claim{width:100%;min-height:38px}.daily-claim:disabled{opacity:.38}
+@media(max-width:350px){.navitem{font-size:9px}.navitem span{font-size:17px}.nav-submenu{bottom:calc(57px + env(safe-area-inset-bottom))}}
