@@ -115,7 +115,7 @@ window.addEventListener('blur',stopActions);
 const canvas=$('water'),ctx=canvas.getContext('2d');
 function draw(t){
 const w=canvas.width,h=canvas.height;sceneTime=t*.00035;
-const phase=(t%150000)/150000,night=phase>.72||phase<.08,dusk=!night&&phase>.60;
+const phase=(t%150000)/150000,night=phase>.72||phase<.08,dusk=!night&&phase>.60;const shoreTop=state.spot===3?'#829f91':state.spot===4?'#7d8756':state.spot===5?'#d1ad88':'#5c9b75',shoreDark=state.spot===3?'#426b68':state.spot===4?'#394d35':state.spot===5?'#7b9d89':'#28664f',waterTop=state.spot===3?'#70c5d0':state.spot===4?'#6a9b7f':state.spot===5?'#59c6d5':'#49b8c6',waterMid=state.spot===3?'#238ca8':state.spot===4?'#36725e':state.spot===5?'#168da8':'#168aa4',waterDeep=state.spot===3?'#0b4a68':state.spot===4?'#183e3d':state.spot===5?'#063e5c':'#073c5a';
 const sky=ctx.createLinearGradient(0,0,0,h*.55);
 sky.addColorStop(0,night?'#102844':dusk?'#d87967':'#70c8e4');sky.addColorStop(1,night?'#425e79':dusk?'#f0b17c':'#f4dfb1');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
 if(t-lastWeatherUpdate>1200){lastWeatherUpdate=t;const weather=['☀️ Ясно','🌤️ Лёгкий ветер','🌦️ Морось'];weatherIndex=Math.floor(t/28000)%weather.length;$('weather').textContent=night?'🌙 Ночь':dusk?'🌇 Закат':weather[weatherIndex]}
@@ -131,9 +131,9 @@ function cloud(x,y,s){ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.fillStyle
 cloud(((w*.35+sceneTime*22)%(w+100))-50,h*.13,.78);
 cloud(((w*.73+sceneTime*13)%(w+120))-60,h*.22,.58);
 // Дальние холмы и берег
-ctx.fillStyle='#5c9b75';ctx.beginPath();ctx.moveTo(0,h*.38);ctx.lineTo(w*.12,h*.23);ctx.lineTo(w*.25,h*.34);ctx.lineTo(w*.43,h*.19);ctx.lineTo(w*.58,h*.32);ctx.lineTo(w*.76,h*.21);ctx.lineTo(w,h*.31);ctx.lineTo(w,h*.5);ctx.lineTo(0,h*.5);ctx.fill();
-ctx.fillStyle='#28664f';ctx.beginPath();ctx.moveTo(0,h*.41);for(let i=0;i<=w;i+=24)ctx.lineTo(i,h*(.39+Math.sin(i*.023+sceneTime)*.018));ctx.lineTo(w,h*.51);ctx.lineTo(0,h*.51);ctx.fill();
-const water=ctx.createLinearGradient(0,h*.43,0,h);water.addColorStop(0,'#49b8c6');water.addColorStop(.45,'#168aa4');water.addColorStop(1,'#073c5a');ctx.fillStyle=water;ctx.fillRect(0,h*.43,w,h*.57);
+ctx.fillStyle=shoreTop;ctx.beginPath();ctx.moveTo(0,h*.38);ctx.lineTo(w*.12,h*.23);ctx.lineTo(w*.25,h*.34);ctx.lineTo(w*.43,h*.19);ctx.lineTo(w*.58,h*.32);ctx.lineTo(w*.76,h*.21);ctx.lineTo(w,h*.31);ctx.lineTo(w,h*.5);ctx.lineTo(0,h*.5);ctx.fill();
+ctx.fillStyle=shoreDark;ctx.beginPath();ctx.moveTo(0,h*.41);for(let i=0;i<=w;i+=24)ctx.lineTo(i,h*(.39+Math.sin(i*.023+sceneTime)*.018));ctx.lineTo(w,h*.51);ctx.lineTo(0,h*.51);ctx.fill();
+const water=ctx.createLinearGradient(0,h*.43,0,h);water.addColorStop(0,waterTop);water.addColorStop(.45,waterMid);water.addColorStop(1,waterDeep);ctx.fillStyle=water;ctx.fillRect(0,h*.43,w,h*.57);
 // Отражения на воде
 for(let i=0;i<22;i++){const y=h*.48+i*h*.023,x=((i*83+sceneTime*80)%(w+100))-40;ctx.beginPath();ctx.ellipse(x,y,15+(i%5)*9,2,0,0,Math.PI*2);ctx.strokeStyle='rgba(204,249,239,'+(.12+(i%3)*.04)+')';ctx.lineWidth=2;ctx.stroke()}
 // Подводные мультяшные рыбки
