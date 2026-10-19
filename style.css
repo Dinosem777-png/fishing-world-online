@@ -76,3 +76,62 @@ html,body,body *{-webkit-touch-callout:none;-webkit-user-select:none;user-select
 @media(max-width:380px){.scene-time #gameClock{font-size:10px;padding:5px 6px}}
 
 .wallet-gold{display:inline-flex;align-items:center;gap:3px;margin-left:7px;padding-left:7px;border-left:1px solid #ffffff2b;color:#f6d779}.premium-info{display:flex;align-items:center;gap:12px;padding:13px;border:1px solid #8a7339}.premium-info .itememoji{background:#493d25}.premium-info .itemmeta{color:#f6d779}
+
+
+/* Compact modern shop UI — tuned for mobile screens */
+.shop-category{
+  margin:0 0 7px;
+  border:1px solid #234957;
+  border-radius:13px;
+  background:linear-gradient(145deg,#102b38,#0c222d);
+  box-shadow:0 5px 16px #0002;
+}
+.shop-category>summary{
+  padding:10px 12px;
+  gap:7px;
+  font-size:12px;
+  line-height:1.25;
+  letter-spacing:.1px;
+  background:linear-gradient(110deg,#153b49,#102b38);
+}
+.shop-category>summary:after{font-size:14px}
+.shop-category[open]>summary{border-bottom:1px solid #ffffff0d}
+.shop-category .shopitem{
+  gap:9px;
+  padding:9px 10px;
+  border-radius:11px;
+  margin:7px;
+  background:#122f3b;
+  border:1px solid #ffffff0b;
+  box-shadow:0 3px 10px #0001;
+}
+.shop-category .itememoji{
+  width:39px;
+  height:39px;
+  border-radius:11px;
+  font-size:21px;
+  background:linear-gradient(145deg,#1b4653,#163441);
+}
+.shop-category .itembody h3{font-size:12px;line-height:1.25;margin:0 0 3px}
+.shop-category .itembody p{font-size:10px;line-height:1.35}
+.shop-category .itemmeta{font-size:10px;margin-top:3px}
+.shop-category .smallbtn{
+  padding:7px 9px;
+  min-height:32px;
+  border-radius:9px;
+  font-size:10px;
+}
+.shop-category .shopitem .smallbtn{flex-shrink:0}
+.shop-category .itembody{min-width:0}
+.shop-category .itembody h3,.shop-category .itembody p{overflow-wrap:anywhere}
+#shop .page-heading,#store .page-heading{padding:5px 3px 11px}
+#shop .page-heading h2,#store .page-heading h2{font-size:21px;margin:3px 0}
+#shop .page-heading p,#store .page-heading p{font-size:11px;line-height:1.4}
+@media(max-width:380px){
+  .shop-category>summary{padding:9px 10px;font-size:11px}
+  .shop-category .shopitem{gap:7px;padding:8px;margin:5px}
+  .shop-category .itememoji{width:35px;height:35px;font-size:19px}
+  .shop-category .itembody h3{font-size:11px}
+  .shop-category .itembody p{font-size:9px}
+  .shop-category .smallbtn{padding:7px;font-size:9px}
+}
