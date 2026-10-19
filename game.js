@@ -78,6 +78,16 @@ const canvas=$('water'),ctx=canvas.getContext('2d');
 function draw(t){
 const w=canvas.width,h=canvas.height;sceneTime=t*.00035;
 const sky=ctx.createLinearGradient(0,0,0,h*.55);sky.addColorStop(0,'#70c8e4');sky.addColorStop(1,'#f4dfb1');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
+// Солнце с мягким свечением
+const sunX=w*.16,sunY=h*.16;
+const glow=ctx.createRadialGradient(sunX,sunY,5,sunX,sunY,62);
+glow.addColorStop(0,'rgba(255,244,174,.72)');glow.addColorStop(1,'rgba(255,244,174,0)');
+ctx.fillStyle=glow;ctx.fillRect(sunX-65,sunY-65,130,130);
+ctx.fillStyle='#fff0ad';ctx.beginPath();ctx.arc(sunX,sunY,18,0,Math.PI*2);ctx.fill();
+// Медленно плывущие облака
+function cloud(x,y,s){ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.fillStyle='rgba(255,255,255,.68)';ctx.beginPath();ctx.ellipse(0,5,25,9,0,0,Math.PI*2);ctx.ellipse(-12,0,12,10,0,0,Math.PI*2);ctx.ellipse(2,-5,15,14,0,0,Math.PI*2);ctx.ellipse(16,1,12,9,0,0,Math.PI*2);ctx.fill();ctx.restore()}
+cloud(((w*.35+sceneTime*22)%(w+100))-50,h*.13,.78);
+cloud(((w*.73+sceneTime*13)%(w+120))-60,h*.22,.58);
 // Дальние холмы и берег
 ctx.fillStyle='#5c9b75';ctx.beginPath();ctx.moveTo(0,h*.38);ctx.lineTo(w*.12,h*.23);ctx.lineTo(w*.25,h*.34);ctx.lineTo(w*.43,h*.19);ctx.lineTo(w*.58,h*.32);ctx.lineTo(w*.76,h*.21);ctx.lineTo(w,h*.31);ctx.lineTo(w,h*.5);ctx.lineTo(0,h*.5);ctx.fill();
 ctx.fillStyle='#28664f';ctx.beginPath();ctx.moveTo(0,h*.41);for(let i=0;i<=w;i+=24)ctx.lineTo(i,h*(.39+Math.sin(i*.023+sceneTime)*.018));ctx.lineTo(w,h*.51);ctx.lineTo(0,h*.51);ctx.fill();
@@ -110,11 +120,13 @@ if(mode==='cast'||mode==='bite'||mode==='fight'){
 const px=w*.53,baseY=h*.625;const dip=mode==='bite'?Math.abs(Math.sin(t*.025))*13:mode==='fight'?Math.sin(t*.018)*7:0;const py=baseY+Math.sin(t*.004)*2+dip;
 ctx.fillStyle='#f4f0d7';ctx.beginPath();ctx.ellipse(px,py,5,9,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#f15e4e';ctx.fillRect(px-4,py-9,8,9);ctx.fillStyle='#fff3c8';ctx.fillRect(px-2,py-15,4,6);
 ctx.beginPath();ctx.ellipse(px,py+10,12+Math.sin(t*.006)*4,3,0,0,Math.PI*2);ctx.strokeStyle='rgba(218,255,244,.75)';ctx.lineWidth=2;ctx.stroke();
-if(mode==='bite'){ctx.strokeStyle='rgba(255,236,143,.95)';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(px,py+12,18+Math.sin(t*.02)*7,6,0,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#fff2a1';ctx.font='bold 22px system-ui';ctx.fillText('!',px+18,py-12)}
+if(mode==='bite'){
+// Брызги вокруг поплавка при поклёвке
+for(let i=0;i<6;i++){const a=i*Math.PI/3+t*.008;const r=13+Math.abs(Math.sin(t*.02+i))*12;ctx.fillStyle='rgba(233,255,249,.9)';ctx.beginPath();ctx.arc(px+Math.cos(a)*r,py+Math.sin(a)*r*.55,2.1,0,Math.PI*2);ctx.fill()}
+ctx.strokeStyle='rgba(255,236,143,.95)';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(px,py+12,18+Math.sin(t*.02)*7,6,0,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#fff2a1';ctx.font='bold 22px system-ui';ctx.fillText('!',px+18,py-12)}
 if(mode==='fight'){ctx.strokeStyle='rgba(255,255,255,.8)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(px-9,py+7);ctx.lineTo(px+10,py+13);ctx.stroke()}
 }
 requestAnimationFrame(draw)}
-requestAnimationFrame(draw);
-requestAnimationFrame(draw);renderAll();setStatus('Всё готово к рыбалке. Забрасывай!');
+renderAll();setStatus('Всё готово к рыбалке. Забрасывай!');
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 })();
