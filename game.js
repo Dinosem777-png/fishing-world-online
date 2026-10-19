@@ -75,13 +75,46 @@ if(result){result.innerHTML='<div class="catch-illustration">'+f.emoji+'</div><d
 notify((f.rare?'✨ РЕДКАЯ РЫБА: ':'Улов: ')+f.name+' · '+fmt(weight)+' кг');renderAll();save()}
 $('castBtn').onclick=cast;$('reelBtn').onclick=reel;
 const canvas=$('water'),ctx=canvas.getContext('2d');
-function draw(t){const w=canvas.width,h=canvas.height;sceneTime=t*.00035;const sky=ctx.createLinearGradient(0,0,0,h*.5);sky.addColorStop(0,'#6fc4d0');sky.addColorStop(1,'#d2e9cf');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);ctx.fillStyle='#4a8270';ctx.beginPath();ctx.moveTo(0,h*.34);ctx.lineTo(w*.12,h*.22);ctx.lineTo(w*.25,h*.32);ctx.lineTo(w*.42,h*.18);ctx.lineTo(w*.58,h*.31);ctx.lineTo(w*.78,h*.2);ctx.lineTo(w,h*.3);ctx.lineTo(w,h*.48);ctx.lineTo(0,h*.48);ctx.fill();ctx.fillStyle='#275d51';ctx.beginPath();ctx.moveTo(0,h*.39);for(let i=0;i<=w;i+=30)ctx.lineTo(i,h*(.38+Math.sin(i*.023+sceneTime)*.025));ctx.lineTo(w,h*.5);ctx.lineTo(0,h*.5);ctx.fill();const water=ctx.createLinearGradient(0,h*.42,0,h);water.addColorStop(0,'#3999a8');water.addColorStop(.5,'#16758c');water.addColorStop(1,'#0c455e');ctx.fillStyle=water;ctx.fillRect(0,h*.43,w,h*.57);for(let i=0;i<16;i++){const y=h*.49+i*h*.031,x=((i*89+sceneTime*65)%(w+100))-40;ctx.beginPath();ctx.ellipse(x,y,18+(i%4)*8,2,0,0,Math.PI*2);ctx.strokeStyle='rgba(185,239,222,'+(.13+(i%3)*.04)+')';ctx.lineWidth=2;ctx.stroke()}ctx.fillStyle='#3b7763';ctx.beginPath();ctx.moveTo(0,h*.78);ctx.quadraticCurveTo(w*.22,h*.7,w*.42,h*.84);ctx.lineTo(w*.42,h);ctx.lineTo(0,h);ctx.fill();// Удилище держится со стороны берега: рукоять внизу справа, вершинка смотрит к воде.
-ctx.lineCap='round';ctx.strokeStyle='#6b4228';ctx.lineWidth=9;ctx.beginPath();ctx.moveTo(w*.88,h*.29);ctx.lineTo(w*.82,h*.20);ctx.stroke();
-ctx.strokeStyle='#d4a15d';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(w*.84,h*.22);ctx.quadraticCurveTo(w*.78,h*.15,w*.70,h*.25);ctx.stroke();
-ctx.strokeStyle='#f6df9b';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(w*.70,h*.25);ctx.lineTo(w*.66,h*.6);ctx.stroke();
-if(mode==='cast'||mode==='bite'||mode==='fight'){const px=w*.66,baseY=h*.61;const dip=mode==='bite'?Math.abs(Math.sin(t*.012))*10:mode==='fight'?Math.sin(t*.02)*5:0;const py=baseY+Math.sin(t*.004)*2+dip;ctx.fillStyle='#f5f0db';ctx.beginPath();ctx.ellipse(px,py,5,9,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#f06e50';ctx.fillRect(px-4,py-8,8,7);ctx.beginPath();ctx.ellipse(px,py+10,12+Math.sin(t*.006)*4,3,0,0,Math.PI*2);ctx.strokeStyle='#d1f5e9aa';ctx.stroke();
-if(mode==='bite'){ctx.strokeStyle='rgba(255,235,155,.9)';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(px,py+13,17+Math.sin(t*.015)*6,5,0,0,Math.PI*2);ctx.stroke()}
-}for(let i=0;i<8;i++){const x=(i*107+t*.012%(w+100))%(w+20)-10;ctx.strokeStyle='#1e5848';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,h*.82);ctx.quadraticCurveTo(x-9,h*.65,x+Math.sin(t*.001+i)*8,h*.59);ctx.stroke()}if(mode==='fight'){ctx.fillStyle='#fce4a3';ctx.font='bold 22px system-ui';ctx.fillText('!',w*.69,h*.53)}requestAnimationFrame(draw)}
+function draw(t){
+const w=canvas.width,h=canvas.height;sceneTime=t*.00035;
+const sky=ctx.createLinearGradient(0,0,0,h*.55);sky.addColorStop(0,'#70c8e4');sky.addColorStop(1,'#f4dfb1');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
+// Дальние холмы и берег
+ctx.fillStyle='#5c9b75';ctx.beginPath();ctx.moveTo(0,h*.38);ctx.lineTo(w*.12,h*.23);ctx.lineTo(w*.25,h*.34);ctx.lineTo(w*.43,h*.19);ctx.lineTo(w*.58,h*.32);ctx.lineTo(w*.76,h*.21);ctx.lineTo(w,h*.31);ctx.lineTo(w,h*.5);ctx.lineTo(0,h*.5);ctx.fill();
+ctx.fillStyle='#28664f';ctx.beginPath();ctx.moveTo(0,h*.41);for(let i=0;i<=w;i+=24)ctx.lineTo(i,h*(.39+Math.sin(i*.023+sceneTime)*.018));ctx.lineTo(w,h*.51);ctx.lineTo(0,h*.51);ctx.fill();
+const water=ctx.createLinearGradient(0,h*.43,0,h);water.addColorStop(0,'#49b8c6');water.addColorStop(.45,'#168aa4');water.addColorStop(1,'#073c5a');ctx.fillStyle=water;ctx.fillRect(0,h*.43,w,h*.57);
+// Отражения на воде
+for(let i=0;i<22;i++){const y=h*.48+i*h*.023,x=((i*83+sceneTime*80)%(w+100))-40;ctx.beginPath();ctx.ellipse(x,y,15+(i%5)*9,2,0,0,Math.PI*2);ctx.strokeStyle='rgba(204,249,239,'+(.12+(i%3)*.04)+')';ctx.lineWidth=2;ctx.stroke()}
+// Подводные мультяшные рыбки
+function fishShape(x,y,s,color,dir){ctx.save();ctx.translate(x,y);ctx.scale(dir*s,s);ctx.fillStyle=color;ctx.beginPath();ctx.ellipse(0,0,23,12,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.moveTo(-18,0);ctx.lineTo(-34,-11);ctx.lineTo(-33,11);ctx.closePath();ctx.fill();ctx.fillStyle='#ffe7a1';ctx.beginPath();ctx.moveTo(2,-10);ctx.lineTo(10,-20);ctx.lineTo(15,-9);ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(13,-3,4,0,Math.PI*2);ctx.fill();ctx.fillStyle='#132d40';ctx.beginPath();ctx.arc(14,-3,1.8,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#e8ffff';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(15,5);ctx.quadraticCurveTo(19,8,22,4);ctx.stroke();ctx.restore()}
+fishShape(w*(.25+Math.sin(t*.00045)*.07),h*.72,1.0,'#f2b84d',1);
+fishShape(w*(.43+Math.sin(t*.0003+.9)*.05),h*.84,.72,'#f08a67',-1);
+fishShape(w*(.14+Math.sin(t*.00035+2)*.04),h*.9,.58,'#a6e1c2',1);
+// Растения под водой
+for(let i=0;i<9;i++){const x=i*31+12;ctx.strokeStyle='#1b7567';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,h);ctx.quadraticCurveTo(x-9,h*.83,x+Math.sin(t*.001+i)*7,h*.77);ctx.stroke()}
+// Деревянный пирс справа
+ctx.fillStyle='#6c452b';ctx.beginPath();ctx.moveTo(w*.68,h*.57);ctx.lineTo(w,h*.52);ctx.lineTo(w,h*.83);ctx.lineTo(w*.69,h*.78);ctx.closePath();ctx.fill();
+for(let i=0;i<7;i++){const x=w*.69+i*w*.045;ctx.strokeStyle=i%2?'#b17a45':'#c18b50';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,h*.57-(x-w*.68)*.16);ctx.lineTo(x,h*.79-(x-w*.68)*.02);ctx.stroke()}
+ctx.strokeStyle='#4b3022';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(w*.73,h*.69);ctx.lineTo(w*.73,h*.88);ctx.moveTo(w*.93,h*.66);ctx.lineTo(w*.93,h*.9);ctx.stroke();
+// Рыбак: ботинки, ноги, тело, голова, шляпа и рука
+ctx.lineCap='round';ctx.strokeStyle='#263b47';ctx.lineWidth=10;ctx.beginPath();ctx.moveTo(w*.84,h*.64);ctx.lineTo(w*.82,h*.73);ctx.lineTo(w*.85,h*.78);ctx.moveTo(w*.84,h*.64);ctx.lineTo(w*.88,h*.72);ctx.lineTo(w*.9,h*.76);ctx.stroke();
+ctx.strokeStyle='#3d75ba';ctx.lineWidth=18;ctx.beginPath();ctx.moveTo(w*.84,h*.53);ctx.lineTo(w*.85,h*.65);ctx.stroke();
+ctx.fillStyle='#e9b58a';ctx.beginPath();ctx.arc(w*.83,h*.48,14,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='#e5bb58';ctx.beginPath();ctx.ellipse(w*.83,h*.46,18,5,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(w*.83,h*.445,12,Math.PI,Math.PI*2);ctx.fill();
+ctx.fillStyle='#273747';ctx.beginPath();ctx.arc(w*.837,h*.48,2,0,Math.PI*2);ctx.fill();
+ctx.strokeStyle='#e9b58a';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(w*.84,h*.55);ctx.lineTo(w*.79,h*.57);ctx.lineTo(w*.77,h*.53);ctx.stroke();
+// Удочка и леска, направленная от рыбака в озеро
+ctx.strokeStyle='#70462b';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(w*.78,h*.54);ctx.quadraticCurveTo(w*.68,h*.31,w*.54,h*.29);ctx.stroke();
+ctx.strokeStyle='#f7f0d6';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(w*.54,h*.29);ctx.quadraticCurveTo(w*.56,h*.45,w*.53,h*.62);ctx.stroke();
+// Поплавок и круги поклёвки
+if(mode==='cast'||mode==='bite'||mode==='fight'){
+const px=w*.53,baseY=h*.625;const dip=mode==='bite'?Math.abs(Math.sin(t*.025))*13:mode==='fight'?Math.sin(t*.018)*7:0;const py=baseY+Math.sin(t*.004)*2+dip;
+ctx.fillStyle='#f4f0d7';ctx.beginPath();ctx.ellipse(px,py,5,9,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#f15e4e';ctx.fillRect(px-4,py-9,8,9);ctx.fillStyle='#fff3c8';ctx.fillRect(px-2,py-15,4,6);
+ctx.beginPath();ctx.ellipse(px,py+10,12+Math.sin(t*.006)*4,3,0,0,Math.PI*2);ctx.strokeStyle='rgba(218,255,244,.75)';ctx.lineWidth=2;ctx.stroke();
+if(mode==='bite'){ctx.strokeStyle='rgba(255,236,143,.95)';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(px,py+12,18+Math.sin(t*.02)*7,6,0,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#fff2a1';ctx.font='bold 22px system-ui';ctx.fillText('!',px+18,py-12)}
+if(mode==='fight'){ctx.strokeStyle='rgba(255,255,255,.8)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(px-9,py+7);ctx.lineTo(px+10,py+13);ctx.stroke()}
+}
+requestAnimationFrame(draw)}
+requestAnimationFrame(draw);
 requestAnimationFrame(draw);renderAll();setStatus('Всё готово к рыбалке. Забрасывай!');
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 })();
