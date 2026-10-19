@@ -1,4 +1,4 @@
-const CACHE='odyssey-mobile-v28';const FILES=['./','./index.html','./style.css','./game.js','./manifest.webmanifest','./icon.svg'];
+const CACHE='odyssey-mobile-v29';const FILES=['./','./index.html','./style.css','./game.js','./manifest.webmanifest','./icon.svg'];
 function patchGame(response){return response.text().then(text=>{text=text.replace("const castFlex=(Number(state.castPower||70)-70),","const castTargetX=w*(.74-(Number(state.castPower||70)*.0034)),castFlex=(Number(state.castPower||70)-70),");text=text.replace("w*(.56-.08*castSwing),h*.45,w*(.53-.22*castSwing),h*.62","w*(.56-.08*castSwing),h*.45,castTargetX,h*.62");text=text.replace(":.53*w+(mode==='fight'?Math.sin(t*.0028)*(fishWeight/500):0)",":castTargetX+(mode==='fight'?Math.sin(t*.0028)*(fishWeight/500):0)");text=text.replace("ctx.stroke();\n// Усиленная отрисовка удочки поверх сцены: остаётся видимой и во время заброса.
 ctx.save();
 const handX=w*.78,handY=h*.54,rodTipX=w*(.54-.18*castSwing-castFlex*.0006),rodTipY=h*(.29+.18*castSwing-castFlex*.0009+rodBend);
